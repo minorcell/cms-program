@@ -36,7 +36,7 @@ body {
     z-index: 100;
 
     opacity: 0;
-    transition: opacity 0.8s ease-out;
+    /* 移除CSS过渡，使用GSAP控制动画 */
 }
 
 .page:nth-child(1) .rocket-info {
@@ -46,7 +46,7 @@ body {
     bottom: 9vh;
     z-index: 1;
     opacity: 0;
-    transition: opacity 0.8s ease-out;
+    /* 移除CSS过渡，使用GSAP控制动画 */
 }
 
 .page:nth-child(1) .intro {
@@ -115,14 +115,12 @@ body {
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 1;
-    transition: opacity 0.8s ease-in-out;
-
+    /* 移除CSS过渡，使用GSAP控制动画 */
 }
 
 .page:nth-child(2) .parts .part .stage-info {
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    /* 移除CSS过渡，使用GSAP控制动画 */
     z-index: 10;
 }
 
@@ -450,12 +448,8 @@ body {
     bottom: 0;
     right: 5vw;
     transform: translate(-50%, 50%);
-    transition: bottom 10s ease-in-out, opacity 0.8s ease-in-out;
+    /* 移除CSS过渡，使用GSAP控制动画 */
     opacity: 0;
-}
-
-.page:nth-child(2) .process .arrow.reset {
-    transition: none;
 }
 
 .page:nth-child(2) .info {
@@ -519,12 +513,7 @@ body {
     align-items: center;
     gap: 10rem;
     position: relative;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.page:nth-child(3) .content.fade-out {
-    opacity: 0;
-    transform: scale(0.95);
+    /* 移除CSS过渡，使用GSAP控制动画 */
 }
 
 .page:nth-child(3) .content .bg-color {
