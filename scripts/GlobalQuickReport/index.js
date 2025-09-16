@@ -94,8 +94,118 @@ const gkhz = [
     }
 ]
 
+// 预创建新闻弹窗元素，避免重复创建
+let newsModalOverlay = null;
+
+function createNewsModal() {
+    if (newsModalOverlay) return newsModalOverlay;
+    
+    newsModalOverlay = document.createElement('div');
+    newsModalOverlay.className = 'news-modal-overlay';
+    newsModalOverlay.innerHTML = `
+        <div class="new-content-box">
+            <div class="close-btn"></div>
+            <div class="children">
+                <div class="new-box-title"></div>
+                <div class="line"></div>
+                <p class="new-content"></p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(newsModalOverlay);
+    
+    // 为关闭按钮添加事件监听器
+    const closeBtn = newsModalOverlay.querySelector('.close-btn');
+    closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideNewsModal();
+    });
+    
+    // 点击背景关闭弹窗
+    newsModalOverlay.addEventListener('click', (e) => {
+        if (e.target === newsModalOverlay) {
+            hideNewsModal();
+        }
+    });
+    
+    // 初始隐藏
+    newsModalOverlay.style.display = 'none';
+    
+    return newsModalOverlay;
+}
+
+function showNewsModal(newsItem) {
+    const modalOverlay = createNewsModal();
+    
+    // 更新内容
+    modalOverlay.querySelector('.new-box-title').textContent = newsItem.title;
+    
+    // 对长内容进行处理，提高渲染性能
+    const contentElement = modalOverlay.querySelector('.new-content');
+    contentElement.textContent = newsItem.content;
+    
+    // 显示弹窗
+    modalOverlay.style.display = 'flex';
+    
+    // 使用GSAP动画显示弹窗
+    gsap.set(modalOverlay, { opacity: 0 });
+    gsap.set(modalOverlay.querySelector('.children'), { y: 50, opacity: 0 });
+    
+    const tl = gsap.timeline();
+    tl.to(modalOverlay, {
+        opacity: 1,
+        duration: 0.3,
+        ease: "power2.out"
+    })
+    .to(modalOverlay.querySelector('.children'), {
+        y: 0,
+        opacity: 1,
+        duration: 0.4,
+        ease: "back.out(1.7)"
+    }, "-=0.1");
+}
+
+function hideNewsModal() {
+    const modalOverlay = newsModalOverlay;
+    if (!modalOverlay || modalOverlay.style.display === 'none') return;
+    
+    // 使用GSAP动画关闭弹窗
+    const tl = gsap.timeline({
+        onComplete: () => {
+            modalOverlay.style.display = 'none';
+        }
+    });
+    tl.to(modalOverlay.querySelector('.children'), {
+        y: 50,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.in"
+    })
+    .to(modalOverlay, {
+        opacity: 0,
+        duration: 0.2,
+        ease: "power2.in"
+    }, "-=0.1");
+}
+
+// 防抖函数，防止频繁点击
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 function createNewsItem(news = []) {
     const newsContainer = document.querySelector('.news');
+    if (!newsContainer) return;
+    
     newsContainer.innerHTML = news.map((item, index) =>
         `<div class="new-item" data-index="${index}">
             <div class="title">${item.title}</div>
@@ -103,59 +213,52 @@ function createNewsItem(news = []) {
         </div>`
     ).join('');
 
-    newsContainer.addEventListener('click', (event) => {
+    // 使用事件委托处理点击事件，避免为每个新闻项单独绑定事件
+    // 添加防抖处理，防止频繁点击
+    const debouncedClickHandler = debounce((event) => {
         const target = event.target.closest('.new-item');
         if (target) {
+            // 添加点击反馈动画
+            gsap.to(target, {
+                scale: 0.98,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                ease: "power2.out"
+            });
+            
             const index = target.getAttribute('data-index');
             const newsItem = news[index];
 
-            // 移除已存在的弹窗
-            const existingModal = document.querySelector('.news-modal-overlay');
-            if (existingModal) {
-                existingModal.remove();
-            }
-
-            // 创建新的弹窗并添加到body
-            const modalOverlay = document.createElement('div');
-            modalOverlay.className = 'news-modal-overlay';
-            modalOverlay.innerHTML = `
-                <div class="new-content-box">
-                    <div class="close-btn"></div>
-                    <div class="children">
-                        <div class="new-box-title">${newsItem.title}</div>
-                        <div class="line"></div>
-                        <p class="new-content">${newsItem.content}</p>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modalOverlay);
-
-            // 显示弹窗
-            setTimeout(() => {
-                modalOverlay.style.opacity = '1';
-            }, 10);
-
-            const closeBtn = modalOverlay.querySelector('.close-btn');
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                modalOverlay.remove();
-            });
-
-            // 点击背景关闭弹窗
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) {
-                    modalOverlay.remove();
-                }
-            });
+            showNewsModal(newsItem);
         }
-    });
+    }, 300); // 300ms防抖延迟
+    
+    newsContainer.addEventListener('click', debouncedClickHandler);
 }
 
 function createPopupVideoOverlay(videoSrc) {
     // 如果已有弹窗，先清除
     const existing = document.querySelector('.video-popup-overlay');
-    if (existing) existing.remove();
+    if (existing) {
+        // 使用GSAP动画关闭现有弹窗
+        const tl = gsap.timeline({
+            onComplete: () => {
+                existing.remove();
+            }
+        });
+        tl.to(existing.querySelector('.video-popup'), {
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.in"
+        })
+        .to(existing, {
+            opacity: 0,
+            duration: 0.2,
+            ease: "power2.in"
+        }, "-=0.1");
+    }
 
     const overlay = document.createElement('div');
     overlay.className = 'video-popup-overlay';
@@ -168,14 +271,48 @@ function createPopupVideoOverlay(videoSrc) {
 
     document.body.appendChild(overlay);
 
+    // 使用GSAP动画显示弹窗
+    gsap.set(overlay, { opacity: 0 });
+    gsap.set(overlay.querySelector('.video-popup'), { scale: 0.8, opacity: 0 });
+    
+    const tl = gsap.timeline();
+    tl.to(overlay, {
+        opacity: 1,
+        duration: 0.3,
+        ease: "power2.out"
+    })
+    .to(overlay.querySelector('.video-popup'), {
+        scale: 1,
+        opacity: 1,
+        duration: 0.4,
+        ease: "back.out(1.7)"
+    }, "-=0.1");
+
     overlay.querySelector('.close-video-btn').addEventListener('click', () => {
-        overlay.remove();
+        // 使用GSAP动画关闭弹窗
+        const tl = gsap.timeline({
+            onComplete: () => {
+                overlay.remove();
+            }
+        });
+        tl.to(overlay.querySelector('.video-popup'), {
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.in"
+        })
+        .to(overlay, {
+            opacity: 0,
+            duration: 0.2,
+            ease: "power2.in"
+        }, "-=0.1");
     });
 }
 
-
 function initHTKJYYYMSFW() {
     const container = document.querySelector('.htkj-yyymsfw');
+    if (!container) return;
+    
     container.innerHTML = htkjyymfw.map((item, index) =>
         `<div class="item">
             <img src="${item.img}" data-index="${index}" alt="HTKJYYYMSFW Image">
@@ -185,6 +322,15 @@ function initHTKJYYYMSFW() {
     container.addEventListener('click', (event) => {
         const img = event.target.closest('img');
         if (img) {
+            // 添加点击反馈动画
+            gsap.to(img, {
+                scale: 0.95,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                ease: "power2.out"
+            });
+            
             const index = img.dataset.index;
             const videoSrc = htkjyymfw[index].vodeo;
             createPopupVideoOverlay(videoSrc);
@@ -194,6 +340,8 @@ function initHTKJYYYMSFW() {
 
 function initGJHZ() {
     const container = document.querySelector('.gjhz');
+    if (!container) return;
+    
     container.innerHTML = gkhz.map((item, index) =>
         `<div class="item">
             <img src="${item.img}" data-index="${index}" alt="GKHZ Image">
@@ -203,6 +351,15 @@ function initGJHZ() {
     container.addEventListener('click', (event) => {
         const img = event.target.closest('img');
         if (img) {
+            // 添加点击反馈动画
+            gsap.to(img, {
+                scale: 0.95,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                ease: "power2.out"
+            });
+            
             const index = img.dataset.index;
             const videoSrc = gkhz[index].vodeo;
             createPopupVideoOverlay(videoSrc);
@@ -211,13 +368,16 @@ function initGJHZ() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // 初始化GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+    
     const header = document.querySelector('.header');
     const scrollContainer = document.querySelector('.container');
     const starBg = document.querySelector('.star-bg');
+    if (!header || !scrollContainer || !starBg) return;
 
     // 初始化头部控制器
     new HeaderController(header, { scrollContainer });
-
 
     // 初始化鼠标控制器
     new Mouse({
@@ -231,6 +391,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     new MeteorEffect(starBg)
+
+    // 预创建新闻弹窗
+    createNewsModal();
 
     // 创建新闻项
     createNewsItem(news);

@@ -68,6 +68,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    will-change: transform;
 }
 
 .page:nth-child(1) .news .new-item {
@@ -80,6 +81,9 @@ body {
     font-weight: 200;
     padding: 3rem 20rem 3rem 8rem;
     border-top: 0.2rem solid rgba(255, 255, 255, 0.3);
+    will-change: background-color, transform;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    transform: translateZ(0);
 }
 
 
@@ -89,13 +93,12 @@ body {
 
 .page:nth-child(1) .news .new-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
 }
 
 .page:nth-child(1) .news .new-item .new-content-box {
     position: fixed;
     display: none;
-    transition: all 0.3s ease;
-    opacity: 0;
     justify-content: center;
     align-items: center;
     top: 0;
@@ -104,8 +107,6 @@ body {
     height: 100vh;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(0.5rem);
-    animation: fade-in-fwd 0.3s ease;
 }
 
 .page:nth-child(1) .news .new-item .new-content-box .children {
@@ -119,12 +120,12 @@ body {
     background-position: center;
     width: 144.49rem;
     height: 77.793rem;
-    padding: 2rem;
     padding: 5rem 8rem 5rem 8rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     color: rgba(255, 255, 255, 1);
+    will-change: transform;
 }
 
 .new-content-box .close-btn {
@@ -138,9 +139,8 @@ body {
     position: absolute;
     top: 0rem;
     right: -10rem;
-    will-change: all;
-    transition: all 0.3s ease;
-    animation: rotate-in 0.6s ease-in-out;
+    will-change: transform;
+    transition: transform 0.3s ease;
 }
 
 .new-content-box .close-btn:hover {
@@ -165,6 +165,9 @@ body {
     font-family: serif, sans-serif;
     font-weight: 200;
     line-height: 1.5;
+    max-height: 60rem;
+    overflow-y: auto;
+    padding-right: 1rem;
 }
 
 .page:nth-child(2) {
@@ -213,6 +216,7 @@ body {
     transform: scale(1.1);
     box-shadow: 0 0 1rem rgba(164, 55, 194, 0.5);
     border: 0.3rem solid rgba(164, 55, 194, 1);
+    transition: all 0.3s ease;
 }
 
 .page:nth-child(2) .title-two {
@@ -263,9 +267,8 @@ body {
     position: absolute;
     top: 0rem;
     right: -10rem;
-
-    transition: all 0.3s ease;
-    animation: rotate-in 0.6s ease-in-out;
+    will-change: transform;
+    transition: transform 0.3s ease;
 }
 
 .close-video-btn:hover {
@@ -276,8 +279,6 @@ body {
 .news-modal-overlay {
     position: fixed;
     display: flex;
-    transition: opacity 0.3s ease;
-    opacity: 0;
     justify-content: center;
     align-items: center;
     top: 0;
@@ -286,8 +287,7 @@ body {
     height: 100vh;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(0.5rem);
-    animation: fade-in-fwd 0.3s ease;
+    transform: translateZ(0);
 }
 
 .news-modal-overlay .new-content-box {
@@ -312,10 +312,11 @@ body {
     background-position: center;
     width: 144.49rem;
     height: 77.793rem;
-    padding: 2rem;
     padding: 5rem 8rem 5rem 8rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     color: rgba(255, 255, 255, 1);
+    will-change: transform;
+    transform: translateZ(0);
 }
