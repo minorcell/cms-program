@@ -115,9 +115,10 @@
         </div>
         <svg id="home-line" viewBox="0 0 1920 5090" preserveAspectRatio="none">
             <defs>
-                <filter id="glow" x="-50%" y="-50%" width="200%" height="300%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" />
                     <feMerge>
+                        <feMergeNode in="blur" />
                         <feMergeNode in="blur" />
                         <feMergeNode in="SourceGraphic" />
                     </feMerge>
