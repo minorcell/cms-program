@@ -115,19 +115,27 @@
         </div>
         <svg id="home-line" viewBox="0 0 1920 5090" preserveAspectRatio="none">
             <defs>
-                <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" />
+                <filter id="glow" x="-150%" y="-150%" width="400%" height="400%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="25" result="blur1" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur2" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur3" />
                     <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="blur" />
+                        <feMergeNode in="blur1" />
+                        <feMergeNode in="blur2" />
+                        <feMergeNode in="blur3" />
                         <feMergeNode in="SourceGraphic" />
                     </feMerge>
                 </filter>
+                <radialGradient id="sliderGradient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                    <stop offset="70%" stop-color="#ffffff" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="#a0d8ff" stop-opacity="0.6" />
+                </radialGradient>
             </defs>
             <path id="curve"
                 d="M1788.94 1.79519C1788.94 1.79519 1593.58 54.4529 1348.08 236.453C1137.1 392.861 984.58 546.452 1016.94 821.795C1049.31 1097.14 1523.62 1075.54 1593.58 1381.45C1653.39 1642.97 1593.59 1794.45 1356.57 2012.95C1097.65 2251.64 786.063 2328 587.582 2397.95C389.102 2467.91 -397.9 2892.95 257.1 3517.45C912.1 4141.95 257.1 4422.51 146.1 4702.45C35.1006 4982.4 705.499 5321 581 5221.01"
                 fill="none" stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.8" />
-            <ellipse id="slider" cx="0" cy="0" rx="20" ry="2" fill="white" filter="url(#glow)" />
+            <ellipse id="slider" cx="0" cy="0" rx="25" ry="3" fill="url(#sliderGradient)" filter="url(#glow)" />
         </svg>
     </div>
 
