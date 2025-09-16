@@ -1,75 +1,67 @@
 class BackgroundMusic {
     constructor() {
-        this.audio = document.getElementById('bgm');
-        this.fadeInDuration = 10000;
-        this.init();
+        this.audio = document.getElementById('bgm')
+        this.fadeInDuration = 10000
+        this.init()
     }
 
     init() {
-        this.audio.volume = 0;
+        this.audio.volume = 0
 
         const startPlayback = () => {
-            this.audio.play();
+            this.audio.play()
             this.fadeIn();
             ['click', 'touchstart', 'keydown'].forEach(event => {
-                document.removeEventListener(event, startPlayback);
-            });
+                document.removeEventListener(event, startPlayback)
+            })
         };
 
         ['click', 'touchstart', 'keydown'].forEach(event => {
-            document.addEventListener(event, startPlayback);
-        });
+            document.addEventListener(event, startPlayback)
+        })
     }
 
     fadeIn() {
-        const startTime = performance.now();
-        const startVolume = 0;
-        const targetVolume = 0.3;
+        const startTime = performance.now()
+        const startVolume = 0
+        const targetVolume = 0.3
 
         const updateVolume = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(Math.max(elapsed / this.fadeInDuration, 0), 1);
+            const elapsed = currentTime - startTime
+            const progress = Math.min(Math.max(elapsed / this.fadeInDuration, 0), 1)
 
-            const volume = startVolume + (targetVolume - startVolume) * progress;
-            this.audio.volume = Math.min(Math.max(volume, 0), 1);
+            const volume = startVolume + (targetVolume - startVolume) * progress
+            this.audio.volume = Math.min(Math.max(volume, 0), 1)
 
             if (progress < 1) {
-                requestAnimationFrame(updateVolume);
+                requestAnimationFrame(updateVolume)
             }
-        };
+        }
 
-        requestAnimationFrame(updateVolume);
+        requestAnimationFrame(updateVolume)
     }
 }
 
-const config = {
-    gridHeight: 7,  // 设置网格的垂直方向上有多少行
-    gridWidth: 12,  // 设置网格的水平方向上有多少列
-    cellSize: 40,   // 设置网格单元格的大小（以像素为单位）
-    mouseInfluenceRadius: 200,  // 设置鼠标影响网格的范围（以像素为单位），越大对性能要求越高
-    throttleDelay: 20, // 鼠标移动事件的节流延迟（毫秒）
-};
-
 class InteractiveGrid {
     constructor(gridElement) {
-        this.grid = gridElement;
-        this.cells = [];
-        this.rows = 6;
-        this.cols = 10;
-        this.setupGrid();
-        this.setupEventListeners();
+        this.grid = gridElement
+        this.cells = []
+        this.rows = 6
+        this.cols = 10
+        this.setupGrid()
+        this.setupEventListeners()
     }
 
     setupGrid() {
         // 创建格子
         for (let row = 0; row < this.rows; row++) {
             for (let col = 0; col < this.cols; col++) {
-                const div = document.createElement("div");
-                div.classList.add("grid-cell");
-                div.dataset.row = row;
-                div.dataset.col = col;
-                this.grid.appendChild(div);
-                this.cells.push(div);
+                const div = document.createElement("div")
+                div.classList.add("grid-cell")
+                div.dataset.row = row
+                div.dataset.col = col
+                this.grid.appendChild(div)
+                this.cells.push(div)
             }
         }
     }
@@ -77,36 +69,36 @@ class InteractiveGrid {
     setupEventListeners() {
         this.cells.forEach((cell) => {
             cell.addEventListener("mouseenter", () => {
-                const row = parseInt(cell.dataset.row);
-                const col = parseInt(cell.dataset.col);
-                this.highlight(row, col);
-            });
-        });
+                const row = parseInt(cell.dataset.row)
+                const col = parseInt(cell.dataset.col)
+                this.highlight(row, col)
+            })
+        })
 
         this.grid.addEventListener("mouseleave", () => {
-            this.resetGrid();
-        });
+            this.resetGrid()
+        })
     }
 
     // 高亮边框函数
     highlight(row, col) {
-        const radius = 1.5;
+        const radius = 1.5
         this.cells.forEach((cell) => {
-            const r = parseInt(cell.dataset.row);
-            const c = parseInt(cell.dataset.col);
-            const dist = Math.hypot(r - row, c - col);
+            const r = parseInt(cell.dataset.row)
+            const c = parseInt(cell.dataset.col)
+            const dist = Math.hypot(r - row, c - col)
 
             if (dist <= radius) {
-                const intensity = 1 - dist / radius;
-                const glow = Math.floor(200 + 55 * intensity);
-                const color = `rgba(${glow}, ${glow}, ${glow}, 0.5)`;
+                const intensity = 1 - dist / radius
+                const glow = Math.floor(200 + 55 * intensity)
+                const color = `rgba(${glow}, ${glow}, ${glow}, 0.5)`
 
                 if (window.gsap) {
                     gsap.to(cell, {
                         borderColor: color,
                         boxShadow: `0 0 ${10 * intensity}px ${color}`,
-                        duration: 0.2
-                    });
+                        duration: 0.5,
+                    })
                 }
             } else {
                 if (window.gsap) {
@@ -114,13 +106,13 @@ class InteractiveGrid {
                         borderColor: "rgba(255, 255, 255, 0.05)",
                         boxShadow: "none",
                         duration: 0.5
-                    });
+                    })
                 } else {
-                    cell.style.borderColor = "rgba(255, 255, 255, 0.05)";
-                    cell.style.boxShadow = "none";
+                    cell.style.borderColor = "rgba(255, 255, 255, 0.05)"
+                    cell.style.boxShadow = "none"
                 }
             }
-        });
+        })
     }
 
     resetGrid() {
@@ -130,116 +122,116 @@ class InteractiveGrid {
                     borderColor: "rgba(255, 255, 255, 0.1)",
                     boxShadow: "none",
                     duration: 0.5
-                });
+                })
             } else {
-                cell.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                cell.style.boxShadow = "none";
+                cell.style.borderColor = "rgba(255, 255, 255, 0.1)"
+                cell.style.boxShadow = "none"
             }
-        });
+        })
     }
 }
 
 class PlanetStars {
     constructor() {
-        this.canvas = document.querySelector('.planet-canvas');
-        if (!this.canvas) return;
+        this.canvas = document.querySelector('.planet-canvas')
+        if (!this.canvas) return
 
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, this.canvas.clientWidth / this.canvas.clientHeight, 0.1, 1000);
+        this.scene = new THREE.Scene()
+        this.camera = new THREE.PerspectiveCamera(75, this.canvas.clientWidth / this.canvas.clientHeight, 0.1, 1000)
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
             alpha: true,
             antialias: true
-        });
+        })
 
-        this.stars = [];
-        this.init();
-        this.animate();
+        this.stars = []
+        this.init()
+        this.animate()
     }
 
     init() {
         // 设置渲染器尺寸
-        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight)
+        this.renderer.setPixelRatio(window.devicePixelRatio)
 
         // 设置相机位置
-        this.camera.position.z = 5;
+        this.camera.position.z = 5
 
         // 创建星星
-        const starGeometry = new THREE.SphereGeometry(0.01, 5, 5);
+        const starGeometry = new THREE.SphereGeometry(0.01, 5, 5)
         const starMaterial = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true
-        });
+        })
 
         // 创建多个星星
         for (let i = 0; i < 50; i++) {
-            const star = new THREE.Mesh(starGeometry, starMaterial.clone());
+            const star = new THREE.Mesh(starGeometry, starMaterial.clone())
 
             // 随机位置
-            star.position.x = (Math.random() - 0.4) * 10;
-            star.position.y = (Math.random() - 0.5) * 5;
-            star.position.z = (Math.random() - 0.5) * 5;
+            star.position.x = (Math.random() - 0.4) * 10
+            star.position.y = (Math.random() - 0.5) * 5
+            star.position.z = (Math.random() - 0.5) * 5
 
             // 为每个星星添加动画属性
             star.userData = {
                 speed: Math.random() * 0.001 + 0.001,
                 opacity: Math.random() * 0.5 + 0.5
-            };
+            }
 
-            this.stars.push(star);
-            this.scene.add(star);
+            this.stars.push(star)
+            this.scene.add(star)
         }
 
         // 监听窗口大小变化
-        window.addEventListener('resize', () => this.onWindowResize());
+        window.addEventListener('resize', () => this.onWindowResize())
     }
 
     animate() {
-        requestAnimationFrame(() => this.animate());
+        requestAnimationFrame(() => this.animate())
 
         // 更新星星位置和透明度
         this.stars.forEach(star => {
             // 向上移动
-            star.position.y += star.userData.speed;
+            star.position.y += star.userData.speed
 
             // 透明度闪烁
-            const material = star.material;
-            material.opacity = star.userData.opacity * (0.7 + 0.3 * Math.sin(Date.now() * 0.003));
+            const material = star.material
+            material.opacity = star.userData.opacity * (0.7 + 0.3 * Math.sin(Date.now() * 0.003))
 
             // 如果星星超出视野，重置到底部
             if (star.position.y > 3) {
-                star.position.y = -3;
-                star.position.x = (Math.random() - 0.5) * 5;
-                star.position.z = (Math.random() - 0.5) * 5;
+                star.position.y = -3
+                star.position.x = (Math.random() - 0.5) * 5
+                star.position.z = (Math.random() - 0.5) * 5
             }
-        });
+        })
 
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render(this.scene, this.camera)
     }
 
     onWindowResize() {
-        this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+        this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight
+        this.camera.updateProjectionMatrix()
+        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight)
     }
 }
 
 function makeGradientFollowMouse() {
-    const intro = document.querySelector('.intro');
-    if (!intro) return;
+    const intro = document.querySelector('.intro')
+    if (!intro) return
 
-    let degree = 0;
-    let increasing = true;
-    let lastTime = 0;
-    let autoAnimId = null;
-    let isThrottled = false;
-    let pendingUpdate = false;
-    let targetDegree = 0;
+    let degree = 0
+    let increasing = true
+    let lastTime = 0
+    let autoAnimId = null
+    let isThrottled = false
+    let pendingUpdate = false
+    let targetDegree = 0
 
     function calcDegree(x) {
-        const w = window.innerWidth;
-        return (x / w) * 360;
+        const w = window.innerWidth
+        return (x / w) * 360
     }
 
     function updateBackground(deg) {
@@ -250,169 +242,143 @@ function makeGradientFollowMouse() {
           rgba(70,48,191,0.1) 10%,
           rgba(0,0,0,0.2) 100%
         )
-      `;
+      `
     }
 
     // 平滑插值函数
     function lerp(start, end, factor) {
-        return start + (end - start) * factor;
+        return start + (end - start) * factor
     }
 
     function startAutoAnimation() {
-        lastTime = performance.now();
+        lastTime = performance.now()
         function animate(time) {
-            const delta = (time - lastTime) / 1000;
-            lastTime = time;
+            const delta = (time - lastTime) / 1000
+            lastTime = time
 
-            const speed = 30;
+            const speed = 30
             if (increasing) {
-                degree = (degree + speed * delta) % 360;
+                degree = (degree + speed * delta) % 360
             } else {
-                degree = (degree - speed * delta + 360) % 360;
+                degree = (degree - speed * delta + 360) % 360
             }
 
-            updateBackground(degree);
-            autoAnimId = requestAnimationFrame(animate);
+            updateBackground(degree)
+            autoAnimId = requestAnimationFrame(animate)
         }
 
         if (autoAnimId === null) {
-            autoAnimId = requestAnimationFrame(animate);
+            autoAnimId = requestAnimationFrame(animate)
         }
     }
 
     function stopAutoAnimation() {
         if (autoAnimId !== null) {
-            cancelAnimationFrame(autoAnimId);
-            autoAnimId = null;
+            cancelAnimationFrame(autoAnimId)
+            autoAnimId = null
         }
     }
 
     // 节流的背景更新函数
     function throttledUpdate() {
         if (isThrottled) {
-            pendingUpdate = true;
-            return;
+            pendingUpdate = true
+            return
         }
 
-        isThrottled = true;
+        isThrottled = true
 
         // 使用平滑插值让过渡更自然
         const smoothStep = () => {
-            const diff = targetDegree - degree;
+            const diff = targetDegree - degree
 
             // 处理角度循环（0-360度）
-            let shortestDiff = diff;
+            let shortestDiff = diff
             if (Math.abs(diff) > 180) {
                 if (diff > 0) {
-                    shortestDiff = diff - 360;
+                    shortestDiff = diff - 360
                 } else {
-                    shortestDiff = diff + 360;
+                    shortestDiff = diff + 360
                 }
             }
 
             // 使用缓动插值
-            degree += shortestDiff * 0.3;
+            degree += shortestDiff * 0.3
 
             // 确保角度在0-360范围内
-            if (degree < 0) degree += 360;
-            if (degree >= 360) degree -= 360;
+            if (degree < 0) degree += 360
+            if (degree >= 360) degree -= 360
 
-            updateBackground(degree);
+            updateBackground(degree)
 
             // 如果还没到达目标角度，继续动画
             if (Math.abs(shortestDiff) > 0.1) {
-                requestAnimationFrame(smoothStep);
+                requestAnimationFrame(smoothStep)
             } else {
-                degree = targetDegree;
-                updateBackground(degree);
+                degree = targetDegree
+                updateBackground(degree)
             }
-        };
+        }
 
-        requestAnimationFrame(smoothStep);
+        requestAnimationFrame(smoothStep)
 
         setTimeout(() => {
-            isThrottled = false;
+            isThrottled = false
             if (pendingUpdate) {
-                pendingUpdate = false;
-                throttledUpdate();
+                pendingUpdate = false
+                throttledUpdate()
             }
-        }, 16); // 约60fps的节流
+        }, 16) // 约60fps的节流
     }
 
     intro.addEventListener('mouseenter', () => {
-        stopAutoAnimation();
-    });
+        stopAutoAnimation()
+    })
 
     intro.addEventListener('mousemove', e => {
-        const newDeg = calcDegree(e.clientX);
-        increasing = newDeg >= degree;
-        targetDegree = newDeg;
-        throttledUpdate();
-    });
+        const newDeg = calcDegree(e.clientX)
+        increasing = newDeg >= degree
+        targetDegree = newDeg
+        throttledUpdate()
+    })
 
     intro.addEventListener('mouseleave', () => {
-        startAutoAnimation();
-    });
+        startAutoAnimation()
+    })
 
-    startAutoAnimation();
+    startAutoAnimation()
 }
 
-function rocketShow() {
-    const rocket = document.querySelector('.rocket-line-draft');
-    const page = document.querySelectorAll('.page')[1];
-
-    if (!rocket || !page) return;
-
-    let isVisible = false;
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !isVisible) {
-                rocket.style.animation = 'rocket-show 1.2s ease-out forwards';
-                isVisible = true;
-            }
-            else if (!entry.isIntersecting && isVisible) {
-                rocket.style.animation = 'none';
-                rocket.style.opacity = '0';
-                rocket.style.transform = 'translateY(100vh)';
-                isVisible = false;
-
-                setTimeout(() => {
-                    rocket.style.transition = 'none';
-                }, 500);
-            }
-        });
-    }, {
-        threshold: 0.01,
-        root: null
-    });
-
-    observer.observe(page);
-}
+// 原rocketShow函数已移除，使用initOptimizedRocketShow替代
 
 document.addEventListener('DOMContentLoaded', () => {
-    const header = document.querySelector('.header');
-    const container = document.querySelector('.container');
-    const pages = document.querySelectorAll('.page');
+    const header = document.querySelector('.header')
+    const container = document.querySelector('.container')
+    const pages = document.querySelectorAll('.page')
     const starsBgOfPageFive = document.querySelector('.stars-bg')
+
+    // 注册GSAP插件
+    gsap.registerPlugin(ScrollTrigger)
+
     // 导航栏控制
-    new HeaderController(header, { container });
+    new HeaderController(header, { container })
     // 背景音乐控制
-    new BackgroundMusic();
+    new BackgroundMusic()
     // 第二页背景图控制
-    makeGradientFollowMouse();
-    // 火箭线稿控制
-    rocketShow();
+    makeGradientFollowMouse()
+
+    // GSAP优化的火箭线稿控制
+    initOptimizedRocketShow()
 
     // 前三页面特效
     for (let i = 0; i < Math.min(3, pages.length); i++) {
         // 添加星空背景
-        new StarBackground(pages[i]);
+        new StarBackground(pages[i])
 
         // 在第二页添加流星效果
         if (i == 1) {
             new MeteorEffect(pages[i], {
-                maxMeteors: 5,
+                maxMeteors: 3, // 减少流星数量提升性能
                 zIndex: 1,
                 meteor: {
                     startXMin: 50,
@@ -430,35 +396,157 @@ document.addEventListener('DOMContentLoaded', () => {
                     tailLengthMin: 1.2,
                     tailLengthMax: 2
                 }
-            });
+            })
         }
     }
 
     // 第五页面的部分的流行效果
     if (starsBgOfPageFive) {
         new StarBackground(starsBgOfPageFive, {
-            starCount: 500,
+            starCount: 300, // 减少星星数量
             starSizeMin: 0.1,
             starSizeMax: 0.2,
             xSpeed: 0.0003,
             ySpeed: 0.0003
-        });
+        })
     }
 
-    const gridElement = document.getElementById('grid');
+    const gridElement = document.getElementById('grid')
     if (gridElement) {
-        new InteractiveGrid(gridElement);
+        new InteractiveGrid(gridElement)
     }
 
     // 第四页面的行星星星效果
-    new PlanetStars();
+    new PlanetStars()
 
     // 鼠标特效
     new Mouse({
         defaultCursor: './assets/images/common/MouseDefault.svg',
         clickCursor: './assets/images/common/MouseClick.svg',
-    });
+    })
 
     // Logo 动画效果
-    new LogoAnimation();
-});
+    new LogoAnimation()
+
+    // 初始化关键动画效果（性能优化版）
+    initKeyAnimations()
+})
+
+// 性能优化版的关键动画
+function initKeyAnimations() {
+    const pages = document.querySelectorAll('.page')
+
+    // 首页标题动画 - 简化版
+    const slogan = pages[0]?.querySelector('.slogan')
+    const title = pages[0]?.querySelector('.title')
+
+    if (slogan) {
+        gsap.fromTo(slogan, {
+            y: 50,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            duration: 1.5,
+            ease: "power2.out",
+            delay: 0.5
+        })
+    }
+
+    if (title) {
+        gsap.fromTo(title, {
+            x: 30,
+            opacity: 0
+        }, {
+            x: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out",
+            delay: 1
+        })
+    }
+
+    // 第二页火箭动画优化
+    const rocket = pages[1]?.querySelector('.rocket-line-draft')
+    if (rocket) {
+        ScrollTrigger.create({
+            trigger: pages[1],
+            start: "top 80%",
+            once: true, // 只执行一次，提升性能
+            onEnter: () => {
+                gsap.fromTo(rocket, {
+                    y: '50vh',
+                    opacity: 0
+                }, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: "power2.out"
+                })
+            }
+        })
+    }
+
+    // 按钮悬停效果 - 轻量版
+    const buttons = document.querySelectorAll('button, .link-container a')
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            gsap.to(button, {
+                scale: 1.05,
+                duration: 0.2,
+                ease: "power2.out"
+            })
+        })
+
+        button.addEventListener('mouseleave', () => {
+            gsap.to(button, {
+                scale: 1,
+                duration: 0.3,
+                ease: "back.out(1.7)"
+            })
+        })
+    })
+}
+
+// 优化的火箭线稿显示
+function initOptimizedRocketShow() {
+    const rocket = document.querySelector('.rocket-line-draft')
+    const page = document.querySelectorAll('.page')[1]
+
+    if (!rocket || !page) return
+
+    let isVisible = false
+    let animationId = null
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !isVisible) {
+                isVisible = true
+                if (animationId) {
+                    gsap.killTweensOf(rocket)
+                }
+
+                gsap.fromTo(rocket, {
+                    y: '100vh',
+                    opacity: 0
+                }, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: "power2.out"
+                })
+            } else if (!entry.isIntersecting && isVisible) {
+                isVisible = false
+                gsap.set(rocket, {
+                    y: '100vh',
+                    opacity: 0
+                })
+            }
+        })
+    }, {
+        threshold: 0.1,
+        root: null
+    })
+
+    observer.observe(page)
+}

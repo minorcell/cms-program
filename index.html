@@ -140,6 +140,7 @@
     </div>
 
     <script src="./build/gsap.js"></script>
+    <script src="./build/scrolltrigger.js"></script>
     <script src="./build/three_r145.js"></script>
     <script src="./scripts/common/HeaderController.js"></script>
     <script src="./scripts/common/StarBackground.js"></script>
@@ -148,26 +149,26 @@
     <script src="./scripts/common/LogoAnimation.js"></script>
     <script src="./scripts/index/index.js"></script>
     <script>
-        const curve = document.getElementById('curve');
-        const slider = document.getElementById('slider');
-        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const speedFactor = 1.15;
+        const curve = document.getElementById('curve')
+        const slider = document.getElementById('slider')
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight
+        const speedFactor = 1.15
 
         function updateSlider() {
-            const scrollY = window.scrollY;
-            const scrollFraction = scrollY / totalHeight;
-            const pathLength = curve.getTotalLength();
-            const offset = scrollFraction * pathLength * speedFactor;
+            const scrollY = window.scrollY
+            const scrollFraction = scrollY / totalHeight
+            const pathLength = curve.getTotalLength()
+            const offset = scrollFraction * pathLength * speedFactor
 
-            const point = curve.getPointAtLength(offset);
-            const prevPoint = curve.getPointAtLength(Math.max(offset - 0.1, 0));
-            const angle = Math.atan2(point.y - prevPoint.y, point.x - prevPoint.x) * 180 / Math.PI;
+            const point = curve.getPointAtLength(offset)
+            const prevPoint = curve.getPointAtLength(Math.max(offset - 0.1, 0))
+            const angle = Math.atan2(point.y - prevPoint.y, point.x - prevPoint.x) * 180 / Math.PI
 
-            slider.setAttribute('transform', `translate(${point.x}, ${point.y}) rotate(${angle})`);
+            slider.setAttribute('transform', `translate(${point.x}, ${point.y}) rotate(${angle})`)
         }
 
-        window.addEventListener('scroll', updateSlider);
-        window.addEventListener('resize', updateSlider);
+        window.addEventListener('scroll', updateSlider)
+        window.addEventListener('resize', updateSlider)
         updateSlider();
     </script>
 </body>

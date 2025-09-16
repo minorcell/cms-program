@@ -46,7 +46,7 @@ body {
     font-family: 'hkjt', sans-serif;
     font-weight: 400;
     font-size: 12rem;
-    animation: fade-in-fwd 2s ease-in-out both;
+    /* 移除CSS动画，由GSAP接管 */
 }
 
 .page:nth-child(1) .title {
@@ -56,7 +56,7 @@ body {
     font-family: 'qtbfsxt', sans-serif;
     font-size: 3rem;
     font-weight: 200;
-    animation: delay-show 2s ease-in-out both;
+    /* 移除CSS动画，由GSAP接管 */
 }
 
 .page:nth-child(1) .top-left-light {
