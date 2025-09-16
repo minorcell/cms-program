@@ -54,8 +54,8 @@ class InteractiveGrid {
     constructor(gridElement) {
         this.grid = gridElement;
         this.cells = [];
-        this.rows = 7;
-        this.cols = 12;
+        this.rows = 6;
+        this.cols = 10;
         this.setupGrid();
         this.setupEventListeners();
     }
@@ -99,7 +99,7 @@ class InteractiveGrid {
             if (dist <= radius) {
                 const intensity = 1 - dist / radius;
                 const glow = Math.floor(200 + 55 * intensity);
-                const color = `rgb(${glow}, ${glow}, ${glow})`;
+                const color = `rgba(${glow}, ${glow}, ${glow}, 0.5)`;
 
                 if (window.gsap) {
                     gsap.to(cell, {
@@ -111,12 +111,12 @@ class InteractiveGrid {
             } else {
                 if (window.gsap) {
                     gsap.to(cell, {
-                        borderColor: "rgba(255, 255, 255, 0.1)",
+                        borderColor: "rgba(255, 255, 255, 0.05)",
                         boxShadow: "none",
                         duration: 0.5
                     });
                 } else {
-                    cell.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    cell.style.borderColor = "rgba(255, 255, 255, 0.05)";
                     cell.style.boxShadow = "none";
                 }
             }

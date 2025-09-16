@@ -87,21 +87,21 @@ body {
 
 .grid-overlay {
     display: grid;
-    width: 90vw;
-    height: 90vh;
+    width: 75vw;
+    height: 75vh;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: all;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(7, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     z-index: 10;
 }
 
 .grid-cell {
     background: transparent;
-    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border: 0.5px solid rgba(0, 0, 0, 0.05);
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
