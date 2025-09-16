@@ -112,6 +112,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   z-index: 10;
+  /* 移除CSS过渡，使用GSAP控制动画 */
 }
 
 .info .intro {
@@ -232,6 +233,29 @@ body {
   z-index: 100;
 }
 
+/* 悬停时的浮动动画 */
+.right-circles:hover .last-circle,
+.right-circles:hover .next-circle {
+  animation: float 3s ease-in-out infinite;
+}
+
+.right-circles:hover .last-circle:hover,
+.right-circles:hover .next-circle:hover {
+  animation: none;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 .last-circle,
 .next-circle {
   width: 7.4rem;
@@ -242,25 +266,28 @@ body {
   justify-content: center;
   color: rgba(255, 255, 255, 1);
   background: rgba(152, 117, 161, 0.15);
-  box-shadow: inset 0px 0px 3px 2px rgba(128, 48, 150);
+  box-shadow: 
+    inset 0px 0px 3px 2px rgba(128, 48, 150),
+    0 0 0 0 rgba(152, 117, 161, 0.4);
   border: 0.1rem solid rgba(209, 209, 209);
-
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .last-circle svg,
 .next-circle svg {
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  width: 3.2rem;
+  height: 3.2rem;
 }
 
 .last-circle svg {
-  width: 3.2rem;
-  height: 3.2rem;
   transform: rotate(90deg);
 }
 
 .next-circle svg {
-  width: 3.2rem;
-  height: 3.2rem;
   transform: rotate(-90deg);
 }
 
@@ -268,14 +295,47 @@ body {
 .next-circle:hover {
   background: rgba(152, 117, 161, 0.25);
   transform: scale(1.1);
-  transition: all 0.3s ease-in-out;
-  animation: pulsate-bck 1s ease-in-out forwards;
+  box-shadow: 
+    inset 0px 0px 3px 2px rgba(128, 48, 150),
+    0 0 0 8px rgba(152, 117, 161, 0.4);
 }
 
-.last-circle:active svg {
-  transform: rotate(450deg);
+/* 添加发光动画 */
+.last-circle.glow,
+.next-circle.glow {
+  animation: button-glow 1.5s ease-in-out infinite alternate;
 }
 
-.next-circle:active svg {
-  transform: rotate(270deg);
+@keyframes button-glow {
+  from {
+    box-shadow: 
+      inset 0px 0px 3px 2px rgba(128, 48, 150),
+      0 0 5px 2px rgba(152, 117, 161, 0.4);
+  }
+  to {
+    box-shadow: 
+      inset 0px 0px 3px 2px rgba(128, 48, 150),
+      0 0 20px 5px rgba(152, 117, 161, 0.8);
+  }
+}
+
+.last-circle:active,
+.next-circle:active {
+  transform: scale(0.95);
+}
+
+/* 按钮波纹效果 */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
 }

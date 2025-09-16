@@ -107,6 +107,38 @@
   }
 }
 
+@keyframes button-glow {
+  from {
+    box-shadow: 
+      inset 0px 0px 3px 2px rgba(128, 48, 150),
+      0 0 5px 2px rgba(152, 117, 161, 0.4);
+  }
+  to {
+    box-shadow: 
+      inset 0px 0px 3px 2px rgba(128, 48, 150),
+      0 0 20px 5px rgba(152, 117, 161, 0.8);
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+}
+
 /* 
   轨道星星转动动画
 */
@@ -164,53 +196,6 @@
 /*
   详情页的切换动画  
 */
-@keyframes slide-out-up-rotate {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-}
-
-@keyframes slide-in-down-rotate {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0) rotateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-out-down-rotate {
-  from {
-    transform: translateY(0) rotateX(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-}
-
-@keyframes slide-in-up-rotate {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0) rotateX(0);
-    opacity: 1;
-  }
-}
 
 @keyframes tracking-in-expand {
   0% {

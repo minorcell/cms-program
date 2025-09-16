@@ -396,8 +396,13 @@ function initOrbitAnimation() {
     const speed = baseSpeed + (index * 5);
     const direction = index % 2 === 0 ? 1 : -1; // 1顺时针，-1逆时针
 
-    // 设置轨道圆的动画
-    circle.style.animation = `orbit ${speed}s linear ${direction === 1 ? '' : 'reverse'} infinite`;
+    // 使用GSAP创建更平滑的旋转动画
+    gsap.to(circle, {
+      rotation: 360 * direction,
+      duration: speed,
+      repeat: -1,
+      ease: "none"
+    });
 
     // 在每个轨道上添加点
     const dotCount = index === 0 ? 0 : 3 + index; // 第一个轨道没有点，其他轨道点数递增
@@ -483,53 +488,184 @@ function updateMissionContent(index, direction) { // index: 目标任务的索�
     `;
     // 更新任务描述
     missionDetailContent.textContent = mission.description;
-
-    // 应用滑入动画
-    let slideInAnimation = '';
-    if (direction === 'next') {
-      slideInAnimation = `slide-in-up-rotate ${animationDuration / 1000}s ease-in-out forwards`; // 新内容从底部向上滑入并旋转
-    } else if (direction === 'prev') {
-      slideInAnimation = `slide-in-down-rotate ${animationDuration / 1000}s ease-in-out forwards`; // 新内容从顶部向下滑入并旋转
-    } else { // initial 初始加载
-      slideInAnimation = `slide-in-up-rotate ${animationDuration / 1000}s ease-in-out forwards`; // 默认初始动画 (从底部向上滑入并旋转)
-    }
-    infoContainer.style.animation = 'none'; // 清除之前的动画状态，确保新动画能够触发
-    requestAnimationFrame(() => { // 确保样式刷新后再应用新动画
-      infoContainer.style.animation = slideInAnimation;
-    });
-
-
-    setTimeout(() => {
-      isAnimating = false; // 动画结束后，重置动画标志
-    }, animationDuration);
   };
 
   if (direction === 'initial') { // 如果是初始加载
-    infoContainer.style.opacity = '0'; // 初始时设置为透明，以配合滑入动画
     performUpdate();
-    requestAnimationFrame(() => { // 确保 opacity:0 已应用，再开始动画（设为1，动画本身会处理opacity）
-      infoContainer.style.opacity = '1';
-    });
+    // 使用GSAP动画显示初始内容
+    gsap.fromTo(infoContainer, 
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+    );
+    setTimeout(() => {
+      isAnimating = false; // 动画结束后，重置动画标志
+    }, 800);
   } else {
-    let slideOutAnimation = '';
-    if (direction === 'next') {
-      slideOutAnimation = `slide-out-up-rotate ${animationDuration / 1000}s ease-in-out forwards`; // 当前内容向上滑出并旋转
-    } else if (direction === 'prev') {
-      slideOutAnimation = `slide-out-down-rotate ${animationDuration / 1000}s ease-in-out forwards`; // 当前内容向下滑出并旋转
-    }
-    infoContainer.style.animation = 'none';
-    requestAnimationFrame(() => {
-      infoContainer.style.animation = slideOutAnimation;
+    // 使用GSAP Timeline创建更流畅的切换动画
+    const timeline = gsap.timeline({
+      onComplete: () => {
+        isAnimating = false; // 动画结束后，重置动画标志
+      }
     });
 
-    setTimeout(performUpdate, animationDuration); // 滑出动画结束后执行内容更新和滑入动画
+    // 根据方向设置滑出动画
+    if (direction === 'next') {
+      // 向上滑出
+      timeline.to(infoContainer, {
+        y: -window.innerHeight,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.in"
+      });
+    } else {
+      // 向下滑出
+      timeline.to(infoContainer, {
+        y: window.innerHeight,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.in"
+      });
+    }
+
+    // 在动画中间点更新内容
+    timeline.add(() => {
+      performUpdate();
+      // 重置容器位置和透明度以准备滑入动画
+      gsap.set(infoContainer, { y: direction === 'next' ? window.innerHeight : -window.innerHeight, opacity: 0 });
+    }, 0.25);
+
+    // 根据方向设置滑入动画
+    if (direction === 'next') {
+      // 从下方滑入
+      timeline.fromTo(infoContainer,
+        { y: window.innerHeight, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0.3
+      );
+    } else {
+      // 从上方滑入
+      timeline.fromTo(infoContainer,
+        { y: -window.innerHeight, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0.3
+      );
+    }
   }
 }
 
 // 处理导航按钮点击
 function handleNavigation() {
-  lastCircle.addEventListener("click", function () {
+  // 创建波纹效果的函数
+  function createRipple(event, button) {
+    const circle = document.createElement("span");
+    circle.classList.add("ripple");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+    button.appendChild(circle);
+    
+    // 清理波纹元素
+    setTimeout(() => {
+      circle.remove();
+    }, 600);
+  }
+
+  lastCircle.addEventListener("mouseenter", function () {
+    // 悬停进入动画
+    gsap.to(lastCircle, {
+      scale: 1.1,
+      boxShadow: "inset 0px 0px 3px 2px rgba(128, 48, 150), 0 0 0 8px rgba(152, 117, 161, 0.4)",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+    
+    // SVG图标颜色变化
+    gsap.to(lastCircle.querySelector('svg path'), {
+      fill: "#a0d8ff",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  });
+
+  lastCircle.addEventListener("mouseleave", function () {
+    // 悬停离开动画
+    gsap.to(lastCircle, {
+      scale: 1,
+      boxShadow: "inset 0px 0px 3px 2px rgba(128, 48, 150), 0 0 0 0 rgba(152, 117, 161, 0.4)",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+    
+    // SVG图标颜色恢复
+    gsap.to(lastCircle.querySelector('svg path'), {
+      fill: "#ffffff",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  });
+
+  nextCircle.addEventListener("mouseenter", function () {
+    // 悬停进入动画
+    gsap.to(nextCircle, {
+      scale: 1.1,
+      boxShadow: "inset 0px 0px 3px 2px rgba(128, 48, 150), 0 0 0 8px rgba(152, 117, 161, 0.4)",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+    
+    // SVG图标颜色变化
+    gsap.to(nextCircle.querySelector('svg path'), {
+      fill: "#a0d8ff",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  });
+
+  nextCircle.addEventListener("mouseleave", function () {
+    // 悬停离开动画
+    gsap.to(nextCircle, {
+      scale: 1,
+      boxShadow: "inset 0px 0px 3px 2px rgba(128, 48, 150), 0 0 0 0 rgba(152, 117, 161, 0.4)",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+    
+    // SVG图标颜色恢复
+    gsap.to(nextCircle.querySelector('svg path'), {
+      fill: "#ffffff",
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  });
+
+  lastCircle.addEventListener("click", function (event) {
     if (isAnimating) return;
+    
+    // 创建波纹效果
+    createRipple(event, lastCircle);
+    
+    // 按钮点击动画
+    const tl = gsap.timeline();
+    tl.to(lastCircle, {
+      scale: 0.9,
+      duration: 0.1,
+      ease: "power2.out"
+    })
+    .to(lastCircle, {
+      scale: 1,
+      duration: 0.2,
+      ease: "back.out(1.7)"
+    });
+    
+    // SVG图标旋转动画
+    gsap.to(lastCircle.querySelector('svg'), {
+      rotation: 450,
+      duration: 0.5,
+      ease: "back.out(1.7)"
+    });
+    
     currentMissionIndex--;
     if (currentMissionIndex < 0) {
       currentMissionIndex = missionData.length - 1; // 循环到最后一个
@@ -537,8 +673,32 @@ function handleNavigation() {
     updateMissionContent(currentMissionIndex, 'prev');
   });
 
-  nextCircle.addEventListener("click", function () {
+  nextCircle.addEventListener("click", function (event) {
     if (isAnimating) return;
+    
+    // 创建波纹效果
+    createRipple(event, nextCircle);
+    
+    // 按钮点击动画
+    const tl = gsap.timeline();
+    tl.to(nextCircle, {
+      scale: 0.9,
+      duration: 0.1,
+      ease: "power2.out"
+    })
+    .to(nextCircle, {
+      scale: 1,
+      duration: 0.2,
+      ease: "back.out(1.7)"
+    });
+    
+    // SVG图标旋转动画
+    gsap.to(nextCircle.querySelector('svg'), {
+      rotation: -450,
+      duration: 0.5,
+      ease: "back.out(1.7)"
+    });
+    
     currentMissionIndex++;
     if (currentMissionIndex >= missionData.length) {
       currentMissionIndex = 0; // 循环到第一个
@@ -600,12 +760,38 @@ window.addEventListener('resize', () => {
 
 // 初始化页面
 document.addEventListener("DOMContentLoaded", function () {
+  // 初始化GSAP ScrollTrigger
+  gsap.registerPlugin(ScrollTrigger);
+  
   initCurrentMissionIndex(); // 根据localStorage初始化任务索引
   StartBackground(); // 初始化星空背景和流星效果
   initOrbitAnimation(); // 初始化轨道动画
   updateMissionContent(currentMissionIndex, 'initial'); // 初始加载对应的任务数据
   handleNavigation(); // 设置导航按钮的点击事件监听
   handleBackButton(); // 设置返回按钮的点击事件监听
+  
+  // 添加按钮入场动画
+  gsap.from([lastCircle, nextCircle], {
+    duration: 0.8,
+    opacity: 0,
+    y: 50,
+    stagger: 0.2,
+    ease: "back.out(1.7)",
+    onComplete: function() {
+      // 添加按钮发光效果以吸引注意
+      setTimeout(() => {
+        lastCircle.classList.add('glow');
+        nextCircle.classList.add('glow');
+        
+        // 3秒后移除发光效果
+        setTimeout(() => {
+          lastCircle.classList.remove('glow');
+          nextCircle.classList.remove('glow');
+        }, 3000);
+      }, 500);
+    }
+  });
+  
   // 初始化鼠标控制器
   new Mouse({
     defaultCursor: '../assets/images/common/MouseDefault.svg',
