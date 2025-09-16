@@ -68,7 +68,7 @@ body {
     background: rgba(70, 48, 191, 0.4);
     filter: blur(64rem);
     animation: vibrate-1 7s ease-out infinite alternate forwards;
-    z-index: 1;
+    z-index: 5;
 }
 
 
@@ -82,17 +82,28 @@ body {
     filter: blur(64rem);
     opacity: 0.6;
     animation: vibrate-1 8s ease-out infinite alternate forwards;
-    z-index: 1;
+    z-index: 5;
 }
 
 .grid-overlay {
-    width: 75vw;
-    height: 75vh;
+    display: grid;
+    width: 90vw;
+    height: 90vh;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: all;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    z-index: 10;
+}
+
+.grid-cell {
+    background: transparent;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .page:nth-child(2) {

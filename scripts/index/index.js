@@ -51,150 +51,90 @@ const config = {
 };
 
 class InteractiveGrid {
-    constructor(svgElement) {
-        this.svg = svgElement;
-        this.lines = [];
-        this.mousePos = { x: 0, y: 0 };
-        this.isThrottled = false;
+    constructor(gridElement) {
+        this.grid = gridElement;
+        this.cells = [];
+        this.rows = 7;
+        this.cols = 12;
         this.setupGrid();
         this.setupEventListeners();
     }
 
     setupGrid() {
-        const rect = this.svg.getBoundingClientRect();
-        const aspectRatio = rect.width / rect.height;
-        this.svg.setAttribute('viewBox', `0 0 ${1000 * aspectRatio} 1000`);
-
-        const segments = 60; // 减少分段数量以提高性能
-
-        // 水平线
-        for (let i = 0; i <= config.gridHeight; i++) {
-            const y = (i * 1000) / config.gridHeight;
-            for (let j = 0; j < segments; j++) {
-                const x1 = (j * 1000 * aspectRatio) / segments;
-                const x2 = ((j + 1) * 1000 * aspectRatio) / segments;
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", x1.toString());
-                line.setAttribute("y1", y.toString());
-                line.setAttribute("x2", x2.toString());
-                line.setAttribute("y2", y.toString());
-                line.setAttribute("data-original-y", y.toString());
-                line.setAttribute("data-center-x", ((x1 + x2) / 2).toString());
-
-                // 添加边缘渐变效果并存储基础透明度
-                const edgeFactorY = Math.min(i / 2, (config.gridHeight - i) / 2);
-                const opacity = Math.min(edgeFactorY, 1) * 0.15;
-                line.setAttribute("data-base-opacity", opacity.toString());
-                line.style.stroke = `rgba(255, 255, 255, ${opacity})`;
-
-                this.svg.appendChild(line);
-                this.lines.push(line);
-            }
-        }
-
-        // 垂直线
-        for (let i = 0; i <= config.gridWidth; i++) {
-            const x = (i * 1000 * aspectRatio) / config.gridWidth;
-            for (let j = 0; j < segments; j++) {
-                const y1 = (j * 1000) / segments;
-                const y2 = ((j + 1) * 1000) / segments;
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", x.toString());
-                line.setAttribute("y1", y1.toString());
-                line.setAttribute("x2", x.toString());
-                line.setAttribute("y2", y2.toString());
-                line.setAttribute("data-original-x", x.toString());
-                line.setAttribute("data-center-y", ((y1 + y2) / 2).toString());
-
-                // 添加边缘渐变效果并存储基础透明度
-                const edgeFactorX = Math.min(i / 2, (config.gridWidth - i) / 2);
-                const opacity = Math.min(edgeFactorX, 1) * 0.15;
-                line.setAttribute("data-base-opacity", opacity.toString());
-                line.style.stroke = `rgba(255, 255, 255, ${opacity})`;
-
-                this.svg.appendChild(line);
-                this.lines.push(line);
+        // 创建格子
+        for (let row = 0; row < this.rows; row++) {
+            for (let col = 0; col < this.cols; col++) {
+                const div = document.createElement("div");
+                div.classList.add("grid-cell");
+                div.dataset.row = row;
+                div.dataset.col = col;
+                this.grid.appendChild(div);
+                this.cells.push(div);
             }
         }
     }
 
     setupEventListeners() {
-        this.svg.addEventListener('mousemove', (e) => {
-            if (this.isThrottled) return;
-            this.isThrottled = true;
-
-            setTimeout(() => {
-                this.isThrottled = false;
-            }, config.throttleDelay);
-
-            const rect = this.svg.getBoundingClientRect();
-            const aspectRatio = rect.width / rect.height;
-            const scaleX = (1000 * aspectRatio) / rect.width;
-            const scaleY = 1000 / rect.height;
-
-            this.mousePos = {
-                x: (e.clientX - rect.left) * scaleX,
-                y: (e.clientY - rect.top) * scaleY
-            };
-
-            this.updateGrid();
+        this.cells.forEach((cell) => {
+            cell.addEventListener("mouseenter", () => {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                this.highlight(row, col);
+            });
         });
 
-        this.svg.addEventListener('mouseleave', () => {
+        this.grid.addEventListener("mouseleave", () => {
             this.resetGrid();
         });
     }
 
-    updateGrid() {
-        const smoothstep = (min, max, value) => {
-            const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
-            return x * x * (3 - 2 * x);
-        };
+    // 高亮边框函数
+    highlight(row, col) {
+        const radius = 1.5;
+        this.cells.forEach((cell) => {
+            const r = parseInt(cell.dataset.row);
+            const c = parseInt(cell.dataset.col);
+            const dist = Math.hypot(r - row, c - col);
 
-        this.lines.forEach(line => {
-            let distance;
-            const baseOpacity = parseFloat(line.getAttribute('data-base-opacity') || "0.15");
+            if (dist <= radius) {
+                const intensity = 1 - dist / radius;
+                const glow = Math.floor(200 + 55 * intensity);
+                const color = `rgb(${glow}, ${glow}, ${glow})`;
 
-            if (line.hasAttribute('data-original-y')) {
-                const centerX = parseFloat(line.getAttribute('data-center-x'));
-                const centerY = parseFloat(line.getAttribute('data-original-y'));
-                distance = Math.sqrt(Math.pow(centerX - this.mousePos.x, 2) + Math.pow(centerY - this.mousePos.y, 2));
+                if (window.gsap) {
+                    gsap.to(cell, {
+                        borderColor: color,
+                        boxShadow: `0 0 ${10 * intensity}px ${color}`,
+                        duration: 0.2
+                    });
+                }
             } else {
-                const centerX = parseFloat(line.getAttribute('data-original-x'));
-                const centerY = parseFloat(line.getAttribute('data-center-y'));
-                distance = Math.sqrt(Math.pow(centerX - this.mousePos.x, 2) + Math.pow(centerY - this.mousePos.y, 2));
-            }
-
-            if (distance < config.mouseInfluenceRadius) {
-                const intensity = smoothstep(0, config.mouseInfluenceRadius, config.mouseInfluenceRadius - distance);
-                const glowStrength = intensity * 10;
-                line.style.filter = `drop-shadow(0 0 ${glowStrength}px rgba(255, 255, 255, 0.9))`;
-                line.style.stroke = `rgba(255, 255, 255, ${intensity})`; // Glow overrides base opacity
-                line.setAttribute('data-intensity', intensity.toString());
-            } else {
-                const currentIntensity = parseFloat(line.getAttribute('data-intensity') || "0");
-                const newIntensity = Math.max(0, currentIntensity - 0.05); // Slower fade out
-                line.setAttribute('data-intensity', newIntensity.toString());
-
-                if (newIntensity > 0) {
-                    const glowStrength = newIntensity * 10;
-                    line.style.filter = `drop-shadow(0 0 ${glowStrength}px rgba(255, 255, 255, 0.9))`;
-                    line.style.stroke = `rgba(255, 255, 255, ${Math.max(baseOpacity, newIntensity)})`;
+                if (window.gsap) {
+                    gsap.to(cell, {
+                        borderColor: "rgba(255, 255, 255, 0.1)",
+                        boxShadow: "none",
+                        duration: 0.5
+                    });
                 } else {
-                    line.style.filter = 'none';
-                    line.style.stroke = `rgba(255, 255, 255, ${baseOpacity})`;
-                    line.removeAttribute('data-intensity'); // Clean up attribute
+                    cell.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    cell.style.boxShadow = "none";
                 }
             }
         });
     }
 
     resetGrid() {
-        this.lines.forEach(line => {
-            const baseOpacity = parseFloat(line.getAttribute('data-base-opacity') || "0.15");
-            line.style.filter = 'none';
-            line.style.stroke = `rgba(255, 255, 255, ${baseOpacity})`;
-            line.removeAttribute('data-intensity');
+        this.cells.forEach((cell) => {
+            if (window.gsap) {
+                gsap.to(cell, {
+                    borderColor: "rgba(255, 255, 255, 0.1)",
+                    boxShadow: "none",
+                    duration: 0.5
+                });
+            } else {
+                cell.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                cell.style.boxShadow = "none";
+            }
         });
     }
 }
@@ -505,9 +445,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const svgElement = document.querySelector('.grid-overlay');
-    if (svgElement) {
-        new InteractiveGrid(svgElement);
+    const gridElement = document.getElementById('grid');
+    if (gridElement) {
+        new InteractiveGrid(gridElement);
     }
 
     // 第四页面的行星星星效果
