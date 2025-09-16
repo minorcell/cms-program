@@ -322,26 +322,23 @@ class QAController {
     }
 
     init() {
-        this.showHideController([
-            this.levelInfo,
-            this.qaBox,
-            this.fragmentBox,
-            this.backpackBox,
-            this.puzzleBox
-        ], [this.initInfo, this.startContent]);
+        // 确保初始状态正确：只显示开始页面元素
+        this.setInitialState();
 
         // 初始时隐藏背包入口
         this.hideBackEntry();
 
         if (this.startBtn) {
             this.startBtn.addEventListener("click", () => {
-                this.showHideController([
-                    this.initInfo,
-                    this.startContent
-                ], [this.levelInfo, this.qaBox]);
-                this.showBackEntry();
-                this.updateHeader();
-                this.showQuestion();
+                this.animatedTransition(
+                    [this.initInfo, this.startContent],
+                    [this.levelInfo, this.qaBox],
+                    () => {
+                        this.showBackEntry();
+                        this.updateHeader();
+                        this.showQuestion();
+                    }
+                );
             });
         }
 
@@ -419,7 +416,12 @@ class QAController {
         }
         if (this.processBarElem) {
             const ratio = totalAll > 0 ? doneAll / totalAll : 0;
-            this.processBarElem.style.width = `${ratio * 100}%`;
+            // GSAP 进度条动画
+            gsap.to(this.processBarElem, {
+                width: `${ratio * 100}%`,
+                duration: 0.8,
+                ease: "power2.out"
+            });
         }
 
         if (this.prevBtn) {
@@ -443,16 +445,42 @@ class QAController {
         if (this.questionElem) this.questionElem.innerHTML = `<img src="../assets/images/WenTianPavilion/QuestionChar.svg" alt="question"> ${question.title}`;
         if (this.optionsContainer) this.optionsContainer.innerHTML = '';
         if (this.optionsContainer) {
-            question.options.forEach(opt => {
+            // 首先设置初始状态为隐藏
+            gsap.set(this.optionsContainer, { opacity: 0, y: 20 });
+
+            question.options.forEach((opt, index) => {
                 const div = document.createElement('div');
                 div.classList.add('option');
                 div.dataset.id = opt.id;
                 div.textContent = opt.content;
-                div.style.cursor = 'pointer';
-                div.style.border = '1px solid transparent';
-                div.style.padding = '0.5rem 1rem';
                 div.addEventListener('click', () => this.selectOption(div));
+
+                // 设置初始状态
+                gsap.set(div, {
+                    opacity: 0,
+                    y: 30,
+                    scale: 0.9
+                });
+
                 this.optionsContainer.appendChild(div);
+
+                // 延迟动画显示每个选项
+                gsap.to(div, {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.5,
+                    ease: "back.out(1.7)",
+                    delay: index * 0.1
+                });
+            });
+
+            // 显示选项容器
+            gsap.to(this.optionsContainer, {
+                opacity: 1,
+                y: 0,
+                duration: 0.4,
+                ease: "power2.out"
             });
         }
         this.selectedOptionId = null;
@@ -467,11 +495,31 @@ class QAController {
         if (this.optionsContainer) {
             Array.from(this.optionsContainer.children).forEach(child => {
                 child.classList.remove('selected');
+                gsap.to(child, {
+                    scale: 1,
+                    duration: 0.2,
+                    ease: "back.out(1.7)"
+                });
             });
         }
+
         div.classList.add('selected');
-        div.style.border = '2px solid rgba(127, 48, 150, 1)';
         this.selectedOptionId = div.dataset.id;
+
+        // GSAP 选中动画
+        gsap.fromTo(div,
+            { scale: 1 },
+            {
+                scale: 1.05,
+                duration: 0.3,
+                ease: "back.out(1.7)",
+                yoyo: true,
+                repeat: 1
+            }
+        );
+
+        // 添加粒子效果
+        this.createSelectionParticles(div);
     }
 
     handleSubmit() {
@@ -488,33 +536,84 @@ class QAController {
         if (this.analysisBtn) this.analysisBtn.style.display = 'flex';
         const correct = this.selectedOptionId === question.answer;
         if (this.optionsContainer) {
-            Array.from(this.optionsContainer.children).forEach(child => {
+            const tl = gsap.timeline();
+
+            Array.from(this.optionsContainer.children).forEach((child, index) => {
                 if (child.dataset.id === question.answer) {
-                    // 正确答案
-                    child.style.backgroundColor = '#e0ffe0';
+                    // 正确答案动画
+                    tl.to(child, {
+                        backgroundColor: '#e0ffe0',
+                        scale: 1.05,
+                        duration: 0.3,
+                        ease: "back.out(1.7)",
+                        delay: index * 0.1
+                    }, 0);
+
                     const rightIcon = document.createElement('img');
                     rightIcon.src = '../assets/images/WenTianPavilion/right.svg';
                     rightIcon.alt = 'correct';
-                    rightIcon.style.width = '2rem';
-                    rightIcon.style.height = '2rem';
-                    rightIcon.style.marginLeft = '1rem';
-                    rightIcon.style.verticalAlign = 'middle';
+                    rightIcon.style.cssText = `
+                        width: 2rem;
+                        height: 2rem;
+                        margin-left: 1rem;
+                        vertical-align: middle;
+                        opacity: 0;
+                        transform: scale(0);
+                    `;
                     child.appendChild(rightIcon);
+
+                    // 图标动画
+                    gsap.to(rightIcon, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.4,
+                        ease: "back.out(1.7)",
+                        delay: 0.3
+                    });
+
                 } else if (child.classList.contains('selected')) {
                     // 用户选择的错误答案
-                    child.style.backgroundColor = '#ffe0e0';
+                    tl.to(child, {
+                        backgroundColor: '#ffe0e0',
+                        x: -5,
+                        duration: 0.1,
+                        ease: "power2.out",
+                        yoyo: true,
+                        repeat: 5,
+                        delay: index * 0.1
+                    }, 0);
+
                     const errorIcon = document.createElement('img');
                     errorIcon.src = '../assets/images/WenTianPavilion/error.svg';
                     errorIcon.alt = 'error';
-                    errorIcon.style.width = '2rem';
-                    errorIcon.style.height = '2rem';
-                    errorIcon.style.marginLeft = '1rem';
-                    errorIcon.style.verticalAlign = 'middle';
+                    errorIcon.style.cssText = `
+                        width: 2rem;
+                        height: 2rem;
+                        margin-left: 1rem;
+                        vertical-align: middle;
+                        opacity: 0;
+                        transform: scale(0);
+                    `;
                     child.appendChild(errorIcon);
+
+                    gsap.to(errorIcon, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.4,
+                        ease: "back.out(1.7)",
+                        delay: 0.3
+                    });
+
                 } else {
-                    // 其他未选择的选项，设置为灰色背景表示未选择
-                    child.style.backgroundColor = 'rgba(128, 128, 128, 0.2)';
-                    child.style.opacity = '0.6';
+                    // 其他未选择的选项
+                    tl.to(child, {
+                        backgroundColor: 'rgba(128, 128, 128, 0.2)',
+                        opacity: 0.6,
+                        scale: 0.98,
+                        duration: 0.3,
+                        ease: "power2.out",
+                        delay: index * 0.1
+                    }, 0);
                 }
             });
         }
@@ -549,14 +648,24 @@ class QAController {
 
     collectFragment() {
         const level = this.getCurrentLevel();
-        this.showHideController([
+        this.animatedTransition([
             this.qaBox,
             this.levelInfo
-        ], [this.fragmentBox]);
-        if (this.fragmentImgElem) this.fragmentImgElem.src = level.reward;
-        const totalLevels = this.data.length;
-        const got = this.currentRewardFragments.length;
-        if (this.fragmentProgressElem) this.fragmentProgressElem.textContent = `碎片获取进度 ${got}/${totalLevels}`;
+        ], [this.fragmentBox], () => {
+            if (this.fragmentImgElem) {
+                this.fragmentImgElem.src = level.reward;
+                // 添加碎片出现动画
+                gsap.fromTo(this.fragmentImgElem,
+                    { scale: 0, rotation: -180 },
+                    { scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.7)" }
+                );
+            }
+            const totalLevels = this.data.length;
+            const got = this.currentRewardFragments.length;
+            if (this.fragmentProgressElem) {
+                this.fragmentProgressElem.textContent = `碎片获取进度 ${got}/${totalLevels}`;
+            }
+        });
     }
 
     handleFragmentContinue() {
@@ -564,14 +673,14 @@ class QAController {
             this.currentLevelIndex++;
             this.currentQuestionIndex = 0;
             this.selectedOptionId = null;
-            this.showHideController([
+            this.animatedTransition([
                 this.fragmentBox
             ], [this.levelInfo, this.qaBox]);
             this.updateHeader();
             this.showQuestion();
         } else {
             this.isAllLevelCompleted = true;
-            this.showHideController([
+            this.animatedTransition([
                 this.fragmentBox,
                 this.levelInfo,
                 this.qaBox
@@ -710,8 +819,22 @@ class QAController {
 
     handleDragStart(e) {
         e.dataTransfer.setData('text/plain', e.target.dataset.index);
-        e.target.style.opacity = '0.5';
-        e.target.style.transform = 'scale(0.95)';
+
+        // GSAP拖拽开始动画
+        gsap.to(e.target, {
+            opacity: 0.8,
+            scale: 1.1,
+            rotation: 5,
+            duration: 0.2,
+            ease: "power2.out"
+        });
+
+        // 创建拖拽阴影效果
+        gsap.to(e.target, {
+            boxShadow: '0 1rem 3rem rgba(127, 48, 150, 0.4)',
+            duration: 0.2,
+            ease: "power2.out"
+        });
     }
 
     handleDragOver(e) {
@@ -737,49 +860,133 @@ class QAController {
 
         if (!piece) return;
 
-        // 恢复透明度和缩放
-        piece.style.opacity = '1';
-        piece.style.transform = 'scale(1)';
-
         // 检查是否已有碎片在目标位置
         const existingPiece = e.target.querySelector('.puzzle-piece');
         if (existingPiece) {
             // 将现有碎片移回碎片容器
             const piecesContainer = document.querySelector('.puzzle-pieces');
-            piecesContainer.appendChild(existingPiece);
+            gsap.to(existingPiece, {
+                x: 0,
+                y: 0,
+                scale: 1,
+                opacity: 0.8,
+                duration: 0.4,
+                ease: "power2.out",
+                onComplete: () => {
+                    piecesContainer.appendChild(existingPiece);
+                }
+            });
         }
 
         if (pieceIndex === targetIndex) {
-            // 正确放置
-            e.target.innerHTML = ''; // 清空内容
+            // 正确放置 - 成功动画
+            e.target.innerHTML = '';
             e.target.appendChild(piece);
             e.target.classList.add('puzzle-completed');
 
-            // 调整碎片在目标位置的样式
-            piece.style.width = '100%';
-            piece.style.height = '100%';
-            piece.style.objectFit = 'cover';
-            piece.style.borderRadius = '0.5rem';
+            // GSAP成功动画
+            gsap.to(piece, {
+                opacity: 1,
+                scale: 1,
+                rotation: 0,
+                width: '100%',
+                height: '100%',
+                boxShadow: '0 0 2rem rgba(74, 222, 128, 0.5)',
+                duration: 0.5,
+                ease: "back.out(1.7)"
+            });
+
+            // 成功粒子效果
+            this.createSuccessParticles(e.target);
 
             this.checkPuzzleCompletion();
         } else {
-            // 错误放置，显示错误动画后移回碎片容器
-            e.target.innerHTML = ''; // 清空内容
+            // 错误放置 - 错误动画
+            e.target.innerHTML = '';
             e.target.appendChild(piece);
 
-            // 错误动画
-            piece.style.filter = 'sepia(1) hue-rotate(-50deg) saturate(2)';
-            setTimeout(() => {
-                const piecesContainer = document.querySelector('.puzzle-pieces');
-                piece.style.width = '8rem';
-                piece.style.height = '8rem';
-                piece.style.objectFit = 'cover';
-                piece.style.filter = 'none';
-                piecesContainer.appendChild(piece);
-                e.target.textContent = `位置 ${parseInt(targetIndex) + 1}`;
-                e.target.classList.remove('puzzle-completed');
-            }, 500);
+            // GSAP错误动画序列
+            const tl = gsap.timeline();
+            tl.to(piece, {
+                filter: 'sepia(1) hue-rotate(-50deg) saturate(2)',
+                scale: 0.9,
+                rotation: -10,
+                duration: 0.2,
+                ease: "power2.out"
+            })
+            .to(piece, {
+                x: -10,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 5,
+                ease: "power2.inOut"
+            })
+            .to(piece, {
+                filter: 'none',
+                scale: 1,
+                rotation: 0,
+                x: 0,
+                opacity: 0.8,
+                duration: 0.3,
+                ease: "power2.out",
+                onComplete: () => {
+                    const piecesContainer = document.querySelector('.puzzle-pieces');
+                    piecesContainer.appendChild(piece);
+                    e.target.textContent = `位置 ${parseInt(targetIndex) + 1}`;
+                    e.target.classList.remove('puzzle-completed');
+                }
+            });
         }
+    }
+
+    // 创建成功放置时的粒子效果
+    createSuccessParticles(target) {
+        const rect = target.getBoundingClientRect();
+        const particleContainer = document.createElement('div');
+        particleContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        `;
+        document.body.appendChild(particleContainer);
+
+        // 创建成功粒子
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                background: rgba(74, 222, 128, 0.9);
+                border-radius: 50%;
+                left: ${rect.left + rect.width / 2}px;
+                top: ${rect.top + rect.height / 2}px;
+            `;
+            particleContainer.appendChild(particle);
+
+            const angle = (Math.PI * 2 * i) / 12;
+            const distance = 40 + Math.random() * 20;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+
+            gsap.to(particle, {
+                x: x,
+                y: y,
+                opacity: 0,
+                scale: 0,
+                duration: 1,
+                ease: "power2.out",
+                delay: Math.random() * 0.3
+            });
+        }
+
+        setTimeout(() => {
+            document.body.removeChild(particleContainer);
+        }, 1500);
     }
 
     checkPuzzleCompletion() {
@@ -1000,28 +1207,130 @@ class QAController {
         });
     }
 
-    showHideController(hiddenControllers, showControllers) {
-        // 立即隐藏不需要的元素
-        hiddenControllers.forEach(controller => {
-            if (controller) {
-                controller.style.display = 'none';
-                controller.style.opacity = '0';
-            }
+    // 使用GSAP的流畅页面切换动画
+    animatedTransition(hideElements, showElements, callback) {
+        const tl = gsap.timeline({
+            onComplete: callback
         });
 
-        // 立即显示需要的元素，然后添加渐入效果
-        showControllers.forEach(controller => {
-            if (controller) {
-                controller.style.display = 'flex';
-                controller.style.opacity = '0';
-                // 强制重排，确保display变化生效
-                controller.offsetHeight;
-                // 添加渐入效果
-                setTimeout(() => {
-                    controller.style.opacity = '1';
-                }, 50);
+        // 先隐藏当前元素
+        if (hideElements.length > 0) {
+            tl.to(hideElements, {
+                opacity: 0,
+                y: -30,
+                duration: 0.4,
+                ease: "power2.in",
+                stagger: 0.1,
+                onComplete: () => {
+                    hideElements.forEach(el => {
+                        if (el) el.style.display = 'none';
+                    });
+                }
+            });
+        }
+
+        // 再显示新元素
+        if (showElements.length > 0) {
+            tl.set(showElements, {
+                display: 'flex',
+                opacity: 0,
+                y: 30,
+                scale: 0.95
+            })
+            .to(showElements, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.6,
+                ease: "power2.out",
+                stagger: 0.15
+            });
+        }
+    }
+
+    // 创建选项选择时的粒子效果
+    createSelectionParticles(element) {
+        const rect = element.getBoundingClientRect();
+        const particleContainer = document.createElement('div');
+        particleContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        `;
+        document.body.appendChild(particleContainer);
+
+        // 创建多个粒子
+        for (let i = 0; i < 8; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background: rgba(127, 48, 150, 0.8);
+                border-radius: 50%;
+                left: ${rect.left + rect.width / 2}px;
+                top: ${rect.top + rect.height / 2}px;
+            `;
+            particleContainer.appendChild(particle);
+
+            // 随机方向动画
+            const angle = (Math.PI * 2 * i) / 8;
+            const distance = 50 + Math.random() * 30;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+
+            gsap.to(particle, {
+                x: x,
+                y: y,
+                opacity: 0,
+                scale: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        }
+
+        // 清理粒子容器
+        setTimeout(() => {
+            document.body.removeChild(particleContainer);
+        }, 1000);
+    }
+
+    // 设置页面初始状态
+    setInitialState() {
+        // 显示初始元素
+        if (this.initInfo) {
+            this.initInfo.style.display = 'flex';
+            this.initInfo.style.opacity = '1';
+        }
+        if (this.startContent) {
+            this.startContent.style.display = 'flex';
+            this.startContent.style.opacity = '1';
+        }
+
+        // 隐藏所有其他元素
+        const elementsToHide = [
+            this.levelInfo,
+            this.qaBox,
+            this.fragmentBox,
+            this.backpackBox,
+            this.puzzleBox
+        ];
+
+        elementsToHide.forEach(element => {
+            if (element) {
+                element.style.display = 'none';
+                element.style.opacity = '0';
             }
         });
+    }
+
+    showHideController(hiddenControllers, showControllers) {
+        // 使用新的动画方法
+        this.animatedTransition(hiddenControllers, showControllers);
     }
 }
 
