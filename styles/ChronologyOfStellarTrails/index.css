@@ -88,15 +88,8 @@ body {
   position: relative;
   width: 100%;
   min-height: 64.7rem;
-  opacity: 0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
   z-index: 10;
   overflow: visible;
-}
-
-.card.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .card .left {
@@ -146,13 +139,17 @@ body {
   font-weight: bold;
   margin-bottom: 0.5rem;
   font-family: fys, sans-serif;
-  opacity: 0;
-  transition: all 0.8s ease;
 }
 
-.card .left .card-year.visible {
+.card .left .card-title {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.card .left .card-title.visible {
   opacity: 1;
-  transform: translateX(5rem) translateY(-2rem) scale(1.2);
+  transform: translateY(0);
 }
 
 .card .left .card-description {
@@ -248,9 +245,6 @@ body {
   font-family: fys, sans-serif;
   color: rgba(255, 255, 255, 1);
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  opacity: 0;
-  transform: translateY(-50%);
-  transition: opacity 0.5s ease, transform 0.5s ease;
   white-space: nowrap;
   z-index: 1;
   pointer-events: none;
@@ -262,9 +256,4 @@ body {
 
 .card:nth-child(even) .card-title {
   right: 55%;
-}
-
-.card.visible .card-title {
-  opacity: 1;
-  transform: translateY(0);
 }

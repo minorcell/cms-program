@@ -164,6 +164,9 @@ function renderCards(container, cardsData) {
 
   // 添加详情按钮点击事件监听
   addDetailButtonListeners();
+  
+  // 重新刷新ScrollTrigger以识别新添加的元素
+  ScrollTrigger.refresh();
 }
 
 /**
@@ -187,41 +190,88 @@ function addDetailButtonListeners() {
 }
 
 /**
- * 使用Intersection Observer监听卡片进入视口
+ * 使用GSAP ScrollTrigger监听卡片进入视口并添加动画效果
  */
 function observeCards() {
-  createVisibilityObserver('.card', (element, isVisible) => {
-    if (isVisible) {
-      element.classList.add('visible');
-    } else {
-      element.classList.remove('visible');
-    }
+  gsap.utils.toArray('.card').forEach(card => {
+    gsap.fromTo(card, 
+      { 
+        opacity: 0,
+        y: 100
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: card,
+          start: "top 80%",
+          end: "top 50%",
+          toggleActions: "play none none reverse",
+          // markers: true // 可选：用于调试，显示触发标记
+        }
+      }
+    );
   });
 }
 
 /**
- * 监视year进入视口
+ * 使用GSAP ScrollTrigger监视年份进入视口并添加动画效果
  */
 function observeYears() {
-  createVisibilityObserver('.card-year', (element, isVisible) => {
-    if (isVisible) {
-      element.classList.add('visible');
-    } else {
-      element.classList.remove('visible');
-    }
+  gsap.utils.toArray('.card-year').forEach(year => {
+    gsap.fromTo(year,
+      {
+        opacity: 0,
+        x: (index, target) => {
+          // 根据卡片是奇数还是偶数来确定动画方向
+          const card = target.closest('.card');
+          return card && card.classList.contains('card:nth-child(even)') ? -100 : 100;
+        },
+        y: -50,
+        scale: 0.8
+      },
+      {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1.2,
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: year,
+          start: "top 80%",
+          end: "top 50%",
+          toggleActions: "play none none reverse",
+          // markers: true // 可选：用于调试，显示触发标记
+        }
+      }
+    );
   });
 }
 
 /**
- * 监视title进入视口
+ * 使用GSAP ScrollTrigger监视标题进入视口并添加动画效果
  */
 function observeTitles() {
-  createVisibilityObserver('.card-title', (element, isVisible) => {
-    if (isVisible) {
-      element.classList.add('visible');
-    } else {
-      element.classList.remove('visible');
-    }
+  gsap.utils.toArray('.card-title').forEach(title => {
+    gsap.fromTo(title,
+      {
+        opacity: 0,
+        y: 50
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: title,
+          start: "top 85%",
+          end: "top 60%",
+          toggleActions: "play none none reverse",
+          // markers: true // 可选：用于调试，显示触发标记
+        }
+      }
+    );
   });
 }
 
@@ -265,6 +315,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const starContainer = document.querySelector('.star-bg');
   const scrollContainer = document.querySelector('.container');
   const cardsContainer = document.querySelector('.cards');
+
+  // 初始化GSAP ScrollTrigger
+  gsap.registerPlugin(ScrollTrigger);
+  
+  // 刷新ScrollTrigger以确保正确计算
+  ScrollTrigger.refresh();
 
   // 初始化头部控制器
   new HeaderController(header, { scrollContainer });
