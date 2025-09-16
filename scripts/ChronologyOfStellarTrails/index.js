@@ -361,4 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
     defaultCursor: '../assets/images/common/MouseDefault.svg',
     clickCursor: '../assets/images/common/MouseClick.svg',
   });
+
+  // 初始化Logo动画
+  new LogoAnimation();
 });

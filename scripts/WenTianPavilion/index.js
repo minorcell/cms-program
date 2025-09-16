@@ -1017,6 +1017,11 @@ class QAController {
                     puzzleContainer.style.backgroundColor = 'rgba(74, 222, 128, 0.2)';
                     puzzleContainer.style.boxShadow = '0 0 2rem rgba(74, 222, 128, 0.5)';
                 }
+
+                // 触发logo的特殊庆祝动画
+                if (window.logoAnimation) {
+                    window.logoAnimation.playSpecialAnimation('pulse');
+                }
             }, 500);
         }
     }
@@ -1349,4 +1354,11 @@ document.addEventListener("DOMContentLoaded", () => {
         elapsed: 0
     });
     new QAController(data);
+
+    // 初始化logo动画
+    const logoAnimation = new LogoAnimation();
+
+    // 可以在特定场景下触发特殊动画
+    // 例如：完成拼图时让logo发光
+    window.logoAnimation = logoAnimation;
 });

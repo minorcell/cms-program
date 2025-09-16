@@ -385,6 +385,9 @@ document.addEventListener("DOMContentLoaded", () => {
         clickCursor: '../assets/images/common/MouseClick.svg',
     });
 
+    // 初始化Logo动画
+    new LogoAnimation();
+
     // 初始化星空背景
     new StarBackground(starBg, {
         starCount: 200
