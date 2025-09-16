@@ -5,30 +5,11 @@
 ```
 cms-program/
 ├── .github/               # GitHub 配置和工作流
-│   └── workflows/         # GitHub Actions 工作流配置
 ├── assets/                # 静态资源
-│   ├── images/            # 图片资源（WebP格式优先）
-│   ├── videos/            # 视频资源（MP4格式）
-│   ├── fonts/             # 字体文件（WOFF2格式）
-│   └── audio/             # 音频资源（MP3格式）
-│   └── models/            # 3D模型资源
 ├── build/                 # 下载的依赖包
-│   └── README.md          # 下载依赖包的说明文档
-│   └── XXXX.js/           # 下载的依赖包
 ├── pages/                 # HTML页面
-│   └── XXXX.html          # XXXX页面
 ├── scripts/               # JavaScript脚本
-│   └── common/            # 公共脚本
-│   |   └── XXXX.js        # 公共脚本
-│   |   └── README.md      # 公共脚本说明文档
-│   └── XXXX/              # XXXX页面脚本
-│       └── index.js       # 主逻辑
 ├── styles/                # 样式文件
-│   ├── reset.css          # 浏览器样式重置
-│   ├── fonts.css          # 字体定义
-│   ├── keyframes.css      # 动画关键帧定义
-│   └── XXXX/              # XXXX页面样式
-│       └── index.css      # 主样式
 ├── index.html             # 网站入口
 └── README.md              # 项目说明文档
 ```
