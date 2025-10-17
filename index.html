@@ -1,11 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="images/svg" href="./assets/images/logo.svg">
+    <link rel="icon" href="./assets/images/logo.svg" type="image/svg+xml">
     <title>赴九天 问苍穹｜中国载人航天</title>
+
+    <!-- SEO -->
+    <meta name="description" content="赴九天，问苍穹 — 中国载人航天互动展示与纪年，包含星轨纪年、天阶十二辰、问天阁与寰宇速报等专题。">
+    <meta name="keywords" content="中国, 载人航天, 航天, 互动, 展示, CMS, three.js">
+    <link rel="canonical" href="https://cms.mcell.top/">
+    <meta name="theme-color" content="#000000">
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="赴九天 问苍穹｜中国载人航天">
+    <meta property="og:title" content="赴九天 问苍穹｜中国载人航天">
+    <meta property="og:description" content="中国载人航天互动展示，包含重要里程碑、专题解析与多媒体内容。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cms.mcell.top/">
+    <meta property="og:image" content="https://cms.mcell.top/assets/images/logo.svg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="赴九天 问苍穹｜中国载人航天">
+    <meta name="twitter:description" content="中国载人航天互动展示，包含重要里程碑、专题解析与多媒体内容。">
+    <meta name="twitter:image" content="https://cms.mcell.top/assets/images/logo.svg">
+
     <link rel="stylesheet" href="./styles/reset.css">
     <link rel="stylesheet" href="./styles/header.css">
     <link rel="stylesheet" href="./styles/index/index.css">
@@ -133,7 +154,7 @@
                 </radialGradient>
             </defs>
             <path id="curve"
-                d="M1788.94 1.79519C1788.94 1.79519 1593.58 54.4529 1348.08 236.453C1137.1 392.861 984.58 546.452 1016.94 821.795C1049.31 1097.14 1523.62 1075.54 1593.58 1381.45C1653.39 1642.97 1593.59 1794.45 1356.57 2012.95C1097.65 2251.64 786.063 2328 587.582 2397.95C389.102 2467.91 -397.9 2892.95 257.1 3517.45C912.1 4141.95 257.1 4422.51 146.1 4702.45C35.1006 4982.4 705.499 5321 581 5221.01"
+                d="M1788.94 1.79519C1788.94 1.79519 1593.58 54.4529 1348.08 236.453C1137.1 392.861 984.58 546.452 1016.94 821.795C1049.31 1097.14 1523.62 1075.54 1593.58 1381.45C1653.39 1642.97 1[...]"
                 fill="none" stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.8" />
             <ellipse id="slider" cx="0" cy="0" rx="25" ry="3" fill="url(#sliderGradient)" filter="url(#glow)" />
         </svg>
@@ -164,7 +185,7 @@
             const prevPoint = curve.getPointAtLength(Math.max(offset - 0.1, 0))
             const angle = Math.atan2(point.y - prevPoint.y, point.x - prevPoint.x) * 180 / Math.PI
 
-            slider.setAttribute('transform', `translate(${point.x}, ${point.y}) rotate(${angle})`)
+            slider.setAttribute('transform', `translate(${point.x}, ${point.y}) rotate(${angle}`)
         }
 
         window.addEventListener('scroll', updateSlider)
