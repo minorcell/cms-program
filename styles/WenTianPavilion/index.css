@@ -8,12 +8,6 @@ body {
     height: 100vh;
 }
 
-/* 移除全局transition，使用GSAP进行精确动画控制 */
-
-.custom-cursor {
-    transition: none !important;
-}
-
 .qa-header {
     position: absolute;
     top: 8rem;

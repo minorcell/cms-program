@@ -29,7 +29,7 @@ class HeaderController {
      * 初始化事件监听
      */
     init() {
-        this.container.addEventListener('scroll', () => this.onScroll());
+        this.container.addEventListener('scroll', () => this.onScroll(), { passive: true });
     }
 
     /**

@@ -318,7 +318,9 @@ class MeteorEffect {
     }
 
     animate = () => {
-        this.updateMeteors();
+        if (!document.hidden && (this.isActive || this.meteors.length)) {
+            this.updateMeteors();
+        }
         requestAnimationFrame(this.animate);
     }
 }

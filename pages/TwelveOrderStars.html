@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="images/svg" href="../assets/images/logo.svg">
     <title>十二阶星辰｜中国载人航天</title>
+    <link rel="preload" href="../assets/images/common/MouseDefault.svg" as="image" type="image/svg+xml" fetchpriority="high">
+    <link rel="preload" href="../assets/images/common/MouseClick.svg" as="image" type="image/svg+xml" fetchpriority="high">
+    <script src="../scripts/common/Mouse.js"></script>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="../styles/keyframes.css">
+    <link rel="stylesheet" href="../styles/fonts.css">
     <link rel="stylesheet" href="../styles/reset.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/TwelveOrderStars/index.css">
@@ -47,7 +53,7 @@
                         <div class="line"></div>
                         <div class="name">火箭起飞</div>
                         <div class="intro">点火后，火箭在推力作用下克服地球重力，逐渐离开发射台，开始上升。</div>
-                        <video class="live-video" muted autoplay loop>
+                        <video class="live-video" muted loop playsinline preload="none">
                             <source src="../assets/videos/TwelveOrderStars/part01.mp4" type="video/mp4">
                             您的浏览器不支持视频播放
                         </video>
@@ -58,7 +64,7 @@
                         <div class="line"></div>
                         <div class="name">逃逸塔分离</div>
                         <div class="intro">在火箭上升到一定高度时，逃逸塔完成保护航天员的使命，与火箭分离。</div>
-                        <video class="live-video" muted autoplay loop>
+                        <video class="live-video" muted loop playsinline preload="none">
                             <source src="../assets/videos/TwelveOrderStars/part02.mp4" type="video/mp4">
                             您的浏览器不支持视频播放
                         </video>
@@ -69,7 +75,7 @@
                         <div class="line"></div>
                         <div class="name">助推器分离</div>
                         <div class="intro">当火箭飞行到一定时间，助推器燃料耗尽，它们会与火箭主体分离，减轻火箭重量，让火箭轻装前行。</div>
-                        <video class="live-video" muted autoplay loop>
+                        <video class="live-video" muted loop playsinline preload="none">
                             <source src="../assets/videos/TwelveOrderStars/part03.mp4" type="video/mp4">
                             您的浏览器不支持视频播放
                         </video>
@@ -80,7 +86,7 @@
                         <div class="line"></div>
                         <div class="name">二极关机</div>
                         <div class="intro">二级火箭根据任务需求进行工作，在达到预定轨道高度和速度时，二级火箭与有效载荷分离，将有效载荷送入预定轨道。</div>
-                        <video class="live-video" muted autoplay loop>
+                        <video class="live-video" muted loop playsinline preload="none">
                             <source src="../assets/videos/TwelveOrderStars/part04.mp4" type="video/mp4">
                             您的浏览器不支持视频播放
                         </video>
@@ -91,7 +97,7 @@
                         <div class="line"></div>
                         <div class="name">级箭分离</div>
                         <div class="intro">热分离是下级推力未消失时上级点火启动实现分离，冷分离则是下级推力消失后借助专门冲量装置完成分离。</div>
-                        <video class="live-video" muted autoplay loop>
+                        <video class="live-video" muted loop playsinline preload="none">
                             <source src="../assets/videos/TwelveOrderStars/part05.mp4" type="video/mp4">
                             您的浏览器不支持视频播放
                         </video>
@@ -123,8 +129,8 @@
                 </div>
             </div>
             <div class="video-player" id="video-player">
-                <video id="launch-video" autoplay loop controls>
-                    <source src="../assets/videos/launch.mp4" type="video/mp4">
+                <video id="launch-video" loop controls playsinline preload="none">
+                    <source src="../assets/videos/TwelveOrderStars/part01.mp4" type="video/mp4">
                     您的浏览器不支持视频播放
                 </video>
                 <button class="close-video" id="close-video-btn">
@@ -137,16 +143,12 @@
             </div>
         </div>
     </div>
-    <script src="../build/gsap.js"></script>
-    <script src="../build/scrolltrigger.js"></script>
-    <script src="../build/three_r145.js"></script>
-    <script src="../build/three_glbloader.js"></script>
-    <script src="../build/three_fontloader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.9.1/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.145.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.145.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="../scripts/common/HeaderController.js"></script>
     <script src="../scripts/common/StarBackground.js"></script>
     <script src="../scripts/common/MeteorEffect.js"></script>
-    <script src="../scripts/common/Mouse.js"></script>
-    <script src="../scripts/common/LogoAnimation.js"></script>
     <script src="../scripts/TwelveOrderStars/index.js"></script>
 </body>
 

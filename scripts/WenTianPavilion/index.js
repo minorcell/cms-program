@@ -273,6 +273,9 @@ const data = [
     },
 ]
 
+const QA_PROGRESS_KEY = 'cms-program:wen-tian-progress'
+const QA_PROGRESS_VERSION = 1
+
 // 答题控制器
 class QAController {
     constructor(data) {
@@ -318,7 +321,9 @@ class QAController {
 
         this.startBtn = this.startContent.querySelector(".start-btn");
 
+        this.restoreProgress();
         this.init();
+        window.addEventListener('pagehide', () => this.saveProgress());
     }
 
     init() {
@@ -328,15 +333,36 @@ class QAController {
         // 初始时隐藏背包入口
         this.hideBackEntry();
 
+        if (this.hasStarted) {
+            this.initInfo.style.display = 'none';
+            this.startContent.style.display = 'none';
+
+            if (this.isAllLevelCompleted) {
+                this.puzzleBox.style.display = 'flex';
+                this.puzzleBox.style.opacity = '1';
+                this.renderPuzzle();
+            } else {
+                this.levelInfo.style.display = 'flex';
+                this.levelInfo.style.opacity = '1';
+                this.qaBox.style.display = 'flex';
+                this.qaBox.style.opacity = '1';
+                this.showBackEntry();
+                this.updateHeader();
+                this.showQuestion(false, true);
+            }
+        }
+
         if (this.startBtn) {
             this.startBtn.addEventListener("click", () => {
+                this.hasStarted = true;
+                this.updateHeader();
+                this.showQuestion(false);
+                this.saveProgress();
                 this.animatedTransition(
                     [this.initInfo, this.startContent],
                     [this.levelInfo, this.qaBox],
                     () => {
                         this.showBackEntry();
-                        this.updateHeader();
-                        this.showQuestion();
                     }
                 );
             });
@@ -357,6 +383,7 @@ class QAController {
                 this.selectedOptionId = null;
                 this.updateHeader();
                 this.showQuestion();
+                this.saveProgress();
             });
         }
 
@@ -375,6 +402,7 @@ class QAController {
                 this.selectedOptionId = null;
                 this.updateHeader();
                 this.showQuestion();
+                this.saveProgress();
             });
         }
 
@@ -439,9 +467,10 @@ class QAController {
         }
     }
 
-    showQuestion() {
+    showQuestion(animateOptions = true, preserveSelection = false) {
         const level = this.getCurrentLevel();
         const question = level.questions[this.currentQuestionIndex];
+        const restoredSelection = preserveSelection ? this.selectedOptionId : null;
         if (this.questionElem) this.questionElem.innerHTML = `<img src="../assets/images/WenTianPavilion/QuestionChar.svg" alt="question"> ${question.title}`;
         if (this.optionsContainer) this.optionsContainer.innerHTML = '';
         if (this.optionsContainer) {
@@ -453,6 +482,7 @@ class QAController {
                 div.classList.add('option');
                 div.dataset.id = opt.id;
                 div.textContent = opt.content;
+                if (opt.id === restoredSelection) div.classList.add('selected');
                 div.addEventListener('click', () => this.selectOption(div));
 
                 // 设置初始状态
@@ -464,31 +494,48 @@ class QAController {
 
                 this.optionsContainer.appendChild(div);
 
-                // 延迟动画显示每个选项
-                gsap.to(div, {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    duration: 0.5,
-                    ease: "back.out(1.7)",
-                    delay: index * 0.1
-                });
+                if (animateOptions) {
+                    gsap.to(div, {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.5,
+                        ease: "back.out(1.7)",
+                        delay: index * 0.1
+                    });
+                } else {
+                    gsap.set(div, { opacity: 1, y: 0, scale: 1 });
+                }
             });
 
-            // 显示选项容器
-            gsap.to(this.optionsContainer, {
-                opacity: 1,
-                y: 0,
-                duration: 0.4,
-                ease: "power2.out"
+            if (animateOptions) {
+                gsap.to(this.optionsContainer, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
+            } else {
+                gsap.set(this.optionsContainer, { opacity: 1, y: 0 });
+            }
+        }
+        this.selectedOptionId = restoredSelection;
+        if (this.submitBtn) {
+            this.submitBtn.style.pointerEvents = question.isCompleted ? 'none' : 'auto';
+            this.submitBtn.style.opacity = question.isCompleted ? '0.6' : '1';
+        }
+        if (question.isCompleted && this.optionsContainer) {
+            Array.from(this.optionsContainer.children).forEach((child) => {
+                if (child.dataset.id === question.answer) {
+                    child.style.backgroundColor = '#e0ffe0';
+                } else if (child.dataset.id === restoredSelection) {
+                    child.style.backgroundColor = '#ffe0e0';
+                } else {
+                    child.style.opacity = '0.6';
+                }
             });
         }
-        this.selectedOptionId = null;
-        if (this.submitBtn) {
-            this.submitBtn.style.pointerEvents = 'auto';
-            this.submitBtn.style.opacity = '1';
-        }
-        if (this.analysisBtn) this.analysisBtn.style.display = 'none';
+        if (this.analysisBtn) this.analysisBtn.style.display = question.isCompleted ? 'flex' : 'none';
     }
 
     selectOption(div) {
@@ -505,6 +552,7 @@ class QAController {
 
         div.classList.add('selected');
         this.selectedOptionId = div.dataset.id;
+        this.saveProgress();
 
         // GSAP 选中动画
         gsap.fromTo(div,
@@ -619,7 +667,9 @@ class QAController {
         }
         if (this.currentQuestionIndex === level.questions.length - 1) {
             level.isCompleted = true;
-            this.currentRewardFragments.push(level.reward);
+            if (!this.currentRewardFragments.includes(level.reward)) {
+                this.currentRewardFragments.push(level.reward);
+            }
             if (this.currentLevelIndex === this.data.length - 1) {
                 this.isAllLevelCompleted = true;
                 this.showHideController([
@@ -633,6 +683,7 @@ class QAController {
                 this.collectFragment();
             }
         }
+        this.saveProgress();
     }
 
     showAnalysis() {
@@ -648,22 +699,24 @@ class QAController {
 
     collectFragment() {
         const level = this.getCurrentLevel();
+        if (this.fragmentImgElem) this.fragmentImgElem.src = level.reward;
+
+        const totalLevels = this.data.length;
+        const got = this.currentRewardFragments.length;
+        if (this.fragmentProgressElem) {
+            this.fragmentProgressElem.textContent = `碎片获取进度 ${got}/${totalLevels}`;
+        }
+
         this.animatedTransition([
             this.qaBox,
             this.levelInfo
         ], [this.fragmentBox], () => {
             if (this.fragmentImgElem) {
-                this.fragmentImgElem.src = level.reward;
                 // 添加碎片出现动画
                 gsap.fromTo(this.fragmentImgElem,
                     { scale: 0, rotation: -180 },
                     { scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.7)" }
                 );
-            }
-            const totalLevels = this.data.length;
-            const got = this.currentRewardFragments.length;
-            if (this.fragmentProgressElem) {
-                this.fragmentProgressElem.textContent = `碎片获取进度 ${got}/${totalLevels}`;
             }
         });
     }
@@ -673,13 +726,15 @@ class QAController {
             this.currentLevelIndex++;
             this.currentQuestionIndex = 0;
             this.selectedOptionId = null;
+            this.saveProgress();
+            this.updateHeader();
+            this.showQuestion(false);
             this.animatedTransition([
                 this.fragmentBox
             ], [this.levelInfo, this.qaBox]);
-            this.updateHeader();
-            this.showQuestion();
         } else {
             this.isAllLevelCompleted = true;
+            this.saveProgress();
             this.animatedTransition([
                 this.fragmentBox,
                 this.levelInfo,
@@ -734,11 +789,11 @@ class QAController {
         if (this.isAllLevelCompleted) {
             this.openBackpack();
         } else {
+            this.updateHeader();
+            this.showQuestion(false, true);
             this.showHideController([
                 this.backpackBox
             ], [this.levelInfo, this.qaBox]);
-            this.updateHeader();
-            this.showQuestion();
         }
     }
 
@@ -1018,10 +1073,6 @@ class QAController {
                     puzzleContainer.style.boxShadow = '0 0 2rem rgba(74, 222, 128, 0.5)';
                 }
 
-                // 触发logo的特殊庆祝动画
-                if (window.logoAnimation) {
-                    window.logoAnimation.playSpecialAnimation('pulse');
-                }
             }, 500);
         }
     }
@@ -1225,7 +1276,6 @@ class QAController {
                 y: -30,
                 duration: 0.4,
                 ease: "power2.in",
-                stagger: 0.1,
                 onComplete: () => {
                     hideElements.forEach(el => {
                         if (el) el.style.display = 'none';
@@ -1247,8 +1297,7 @@ class QAController {
                 y: 0,
                 scale: 1,
                 duration: 0.6,
-                ease: "power2.out",
-                stagger: 0.15
+                ease: "power2.out"
             });
         }
     }
@@ -1333,6 +1382,68 @@ class QAController {
         });
     }
 
+    restoreProgress() {
+        this.hasStarted = false;
+
+        try {
+            const saved = JSON.parse(localStorage.getItem(QA_PROGRESS_KEY));
+            if (!saved || saved.version !== QA_PROGRESS_VERSION) return;
+
+            const levelIndex = Number(saved.currentLevelIndex);
+            const questionIndex = Number(saved.currentQuestionIndex);
+            const level = this.data[levelIndex];
+            if (!level || !level.questions[questionIndex]) return;
+
+            const completedQuestionIds = new Set(saved.completedQuestionIds || []);
+            const completedLevelIds = new Set(saved.completedLevelIds || []);
+            this.data.forEach((item) => {
+                item.isCompleted = completedLevelIds.has(item.id);
+                item.questions.forEach((question) => {
+                    question.isCompleted = completedQuestionIds.has(question.id);
+                });
+            });
+
+            const validRewards = new Set(this.data.map((item) => item.reward));
+            this.currentRewardFragments = [...new Set(saved.rewardFragments || [])]
+                .filter((reward) => validRewards.has(reward));
+            this.currentLevelIndex = levelIndex;
+            this.currentQuestionIndex = questionIndex;
+            this.isAllLevelCompleted = Boolean(saved.isAllLevelCompleted);
+            this.hasStarted = Boolean(saved.hasStarted);
+
+            const validOptionIds = new Set(level.questions[questionIndex].options.map((option) => option.id));
+            this.selectedOptionId = validOptionIds.has(saved.selectedOptionId)
+                ? saved.selectedOptionId
+                : null;
+        } catch {
+            try {
+                localStorage.removeItem(QA_PROGRESS_KEY);
+            } catch {
+                // Ignore unavailable storage.
+            }
+        }
+    }
+
+    saveProgress() {
+        try {
+            localStorage.setItem(QA_PROGRESS_KEY, JSON.stringify({
+                version: QA_PROGRESS_VERSION,
+                hasStarted: this.hasStarted,
+                currentLevelIndex: this.currentLevelIndex,
+                currentQuestionIndex: this.currentQuestionIndex,
+                selectedOptionId: this.selectedOptionId,
+                completedQuestionIds: this.data.flatMap((level) =>
+                    level.questions.filter((question) => question.isCompleted).map((question) => question.id)
+                ),
+                completedLevelIds: this.data.filter((level) => level.isCompleted).map((level) => level.id),
+                rewardFragments: this.currentRewardFragments,
+                isAllLevelCompleted: this.isAllLevelCompleted,
+            }));
+        } catch {
+            // Storage may be unavailable in private or restricted browsing contexts.
+        }
+    }
+
     showHideController(hiddenControllers, showControllers) {
         // 使用新的动画方法
         this.animatedTransition(hiddenControllers, showControllers);
@@ -1341,10 +1452,8 @@ class QAController {
 
 document.addEventListener("DOMContentLoaded", () => {
     const qaContainer = document.querySelector('.qa-container');
-    new Mouse({
-        defaultCursor: '../assets/images/common/MouseDefault.svg',
-        clickCursor: '../assets/images/common/MouseClick.svg',
-    });
+    new QAController(data);
+
     new StarBackground(qaContainer, {
         starCount: 300,
         starSizeMin: 0.08,
@@ -1353,12 +1462,4 @@ document.addEventListener("DOMContentLoaded", () => {
         ySpeed: 0.0002,
         elapsed: 0
     });
-    new QAController(data);
-
-    // 初始化logo动画
-    const logoAnimation = new LogoAnimation();
-
-    // 可以在特定场景下触发特殊动画
-    // 例如：完成拼图时让logo发光
-    window.logoAnimation = logoAnimation;
 });

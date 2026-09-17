@@ -9,7 +9,7 @@ class BackgroundMusic {
         this.audio.volume = 0
 
         const startPlayback = () => {
-            this.audio.play()
+            this.audio.play().catch(() => {})
             this.fadeIn();
             ['click', 'touchstart', 'keydown'].forEach(event => {
                 document.removeEventListener(event, startPlayback)
@@ -43,91 +43,79 @@ class BackgroundMusic {
 }
 
 class InteractiveGrid {
-    constructor(gridElement) {
-        this.grid = gridElement
-        this.cells = []
+    constructor(canvas) {
+        this.canvas = canvas
+        this.context = canvas.getContext('2d')
         this.rows = 6
         this.cols = 10
-        this.setupGrid()
-        this.setupEventListeners()
+        this.pointer = null
+        this.frame = null
+
+        new ResizeObserver(() => this.resize()).observe(canvas)
+        canvas.addEventListener('pointermove', (event) => this.onPointerMove(event), { passive: true })
+        canvas.addEventListener('pointerleave', () => {
+            this.pointer = null
+            this.scheduleDraw()
+        })
+        this.resize()
     }
 
-    setupGrid() {
-        // 创建格子
+    resize() {
+        const { width, height } = this.canvas.getBoundingClientRect()
+        const pixelRatio = Math.min(window.devicePixelRatio, 2)
+        this.canvas.width = Math.round(width * pixelRatio)
+        this.canvas.height = Math.round(height * pixelRatio)
+        this.context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
+        this.width = width
+        this.height = height
+        this.draw()
+    }
+
+    onPointerMove(event) {
+        const bounds = this.canvas.getBoundingClientRect()
+        this.pointer = {
+            column: (event.clientX - bounds.left) / (bounds.width / this.cols) - 0.5,
+            row: (event.clientY - bounds.top) / (bounds.height / this.rows) - 0.5,
+        }
+        this.scheduleDraw()
+    }
+
+    scheduleDraw() {
+        if (this.frame) return
+        this.frame = requestAnimationFrame(() => {
+            this.frame = null
+            this.draw()
+        })
+    }
+
+    draw() {
+        const context = this.context
+        const cellWidth = this.width / this.cols
+        const cellHeight = this.height / this.rows
+
+        context.clearRect(0, 0, this.width, this.height)
+
         for (let row = 0; row < this.rows; row++) {
-            for (let col = 0; col < this.cols; col++) {
-                const div = document.createElement("div")
-                div.classList.add("grid-cell")
-                div.dataset.row = row
-                div.dataset.col = col
-                this.grid.appendChild(div)
-                this.cells.push(div)
+            for (let column = 0; column < this.cols; column++) {
+                const distance = this.pointer
+                    ? Math.hypot(row - this.pointer.row, column - this.pointer.column)
+                    : Infinity
+                const intensity = Math.max(0, 1 - distance / 1.8)
+
+                context.strokeStyle = `rgba(255, 255, 255, ${0.045 + intensity * 0.4})`
+                context.shadowColor = `rgba(159, 135, 255, ${intensity * 0.45})`
+                context.shadowBlur = intensity * 14
+                context.lineWidth = 1
+                context.strokeRect(
+                    column * cellWidth + 0.5,
+                    row * cellHeight + 0.5,
+                    cellWidth - 1,
+                    cellHeight - 1
+                )
             }
         }
-    }
 
-    setupEventListeners() {
-        this.cells.forEach((cell) => {
-            cell.addEventListener("mouseenter", () => {
-                const row = parseInt(cell.dataset.row)
-                const col = parseInt(cell.dataset.col)
-                this.highlight(row, col)
-            })
-        })
-
-        this.grid.addEventListener("mouseleave", () => {
-            this.resetGrid()
-        })
-    }
-
-    // 高亮边框函数
-    highlight(row, col) {
-        const radius = 1.5
-        this.cells.forEach((cell) => {
-            const r = parseInt(cell.dataset.row)
-            const c = parseInt(cell.dataset.col)
-            const dist = Math.hypot(r - row, c - col)
-
-            if (dist <= radius) {
-                const intensity = 1 - dist / radius
-                const glow = Math.floor(200 + 55 * intensity)
-                const color = `rgba(${glow}, ${glow}, ${glow}, 0.5)`
-
-                if (window.gsap) {
-                    gsap.to(cell, {
-                        borderColor: color,
-                        boxShadow: `0 0 ${10 * intensity}px ${color}`,
-                        duration: 0.5,
-                    })
-                }
-            } else {
-                if (window.gsap) {
-                    gsap.to(cell, {
-                        borderColor: "rgba(255, 255, 255, 0.05)",
-                        boxShadow: "none",
-                        duration: 0.5
-                    })
-                } else {
-                    cell.style.borderColor = "rgba(255, 255, 255, 0.05)"
-                    cell.style.boxShadow = "none"
-                }
-            }
-        })
-    }
-
-    resetGrid() {
-        this.cells.forEach((cell) => {
-            if (window.gsap) {
-                gsap.to(cell, {
-                    borderColor: "rgba(255, 255, 255, 0.1)",
-                    boxShadow: "none",
-                    duration: 0.5
-                })
-            } else {
-                cell.style.borderColor = "rgba(255, 255, 255, 0.1)"
-                cell.style.boxShadow = "none"
-            }
-        })
+        context.shadowBlur = 0
     }
 }
 
@@ -145,6 +133,7 @@ class PlanetStars {
         })
 
         this.stars = []
+        this.isVisible = false
         this.init()
         this.animate()
     }
@@ -152,7 +141,7 @@ class PlanetStars {
     init() {
         // 设置渲染器尺寸
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight)
-        this.renderer.setPixelRatio(window.devicePixelRatio)
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
         // 设置相机位置
         this.camera.position.z = 5
@@ -183,12 +172,18 @@ class PlanetStars {
             this.scene.add(star)
         }
 
+        new IntersectionObserver(([entry]) => {
+            this.isVisible = entry.isIntersecting
+        }, { rootMargin: '100px' }).observe(this.canvas)
+
         // 监听窗口大小变化
         window.addEventListener('resize', () => this.onWindowResize())
     }
 
     animate() {
         requestAnimationFrame(() => this.animate())
+
+        if (!this.isVisible || document.hidden) return
 
         // 更新星星位置和透明度
         this.stars.forEach(star => {
@@ -357,9 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pages = document.querySelectorAll('.page')
     const starsBgOfPageFive = document.querySelector('.stars-bg')
 
-    // 注册GSAP插件
-    gsap.registerPlugin(ScrollTrigger)
-
     // 导航栏控制
     new HeaderController(header, { container })
     // 背景音乐控制
@@ -369,6 +361,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // GSAP优化的火箭线稿控制
     initOptimizedRocketShow()
+
+    const gridElement = document.getElementById('grid')
+    if (gridElement) {
+        new InteractiveGrid(gridElement)
+    }
+
+    initKeyAnimations()
 
     // 前三页面特效
     for (let i = 0; i < Math.min(3, pages.length); i++) {
@@ -411,25 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    const gridElement = document.getElementById('grid')
-    if (gridElement) {
-        new InteractiveGrid(gridElement)
-    }
-
     // 第四页面的行星星星效果
     new PlanetStars()
-
-    // 鼠标特效
-    new Mouse({
-        defaultCursor: './assets/images/common/MouseDefault.svg',
-        clickCursor: './assets/images/common/MouseClick.svg',
-    })
-
-    // Logo 动画效果
-    new LogoAnimation()
-
-    // 初始化关键动画效果（性能优化版）
-    initKeyAnimations()
 })
 
 // 性能优化版的关键动画
@@ -466,27 +448,6 @@ function initKeyAnimations() {
         })
     }
 
-    // 第二页火箭动画优化
-    const rocket = pages[1]?.querySelector('.rocket-line-draft')
-    if (rocket) {
-        ScrollTrigger.create({
-            trigger: pages[1],
-            start: "top 80%",
-            once: true, // 只执行一次，提升性能
-            onEnter: () => {
-                gsap.fromTo(rocket, {
-                    y: '50vh',
-                    opacity: 0
-                }, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1.5,
-                    ease: "power2.out"
-                })
-            }
-        })
-    }
-
     // 按钮悬停效果 - 轻量版
     const buttons = document.querySelectorAll('button, .link-container a')
     buttons.forEach(button => {
@@ -515,38 +476,72 @@ function initOptimizedRocketShow() {
 
     if (!rocket || !page) return
 
-    let isVisible = false
-    let animationId = null
+    gsap.set(rocket, { y: '100vh', opacity: 0 })
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !isVisible) {
-                isVisible = true
-                if (animationId) {
-                    gsap.killTweensOf(rocket)
-                }
+    const observer = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return
 
-                gsap.fromTo(rocket, {
-                    y: '100vh',
-                    opacity: 0
-                }, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1.2,
-                    ease: "power2.out"
-                })
-            } else if (!entry.isIntersecting && isVisible) {
-                isVisible = false
-                gsap.set(rocket, {
-                    y: '100vh',
-                    opacity: 0
-                })
-            }
+        const reveal = () => gsap.to(rocket, {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'power2.out',
+            overwrite: true,
         })
+
+        if (rocket.complete) {
+            reveal()
+        } else {
+            rocket.addEventListener('load', reveal, { once: true })
+        }
+
+        observer.disconnect()
     }, {
-        threshold: 0.1,
-        root: null
+        threshold: 0.55,
     })
 
     observer.observe(page)
 }
+
+function initHomeLineProgress() {
+    const curve = document.getElementById('home-line-geometry')
+    const progressLine = document.getElementById('home-line-progress')
+    const slider = document.getElementById('slider')
+
+    if (!curve || !progressLine || !slider) return
+
+    const pathLength = curve.getTotalLength()
+    let totalHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1)
+    let ticking = false
+
+    progressLine.style.strokeDasharray = `${pathLength} ${pathLength}`
+
+    function render() {
+        const scrollProgress = Math.min(Math.max(window.scrollY / totalHeight, 0), 1)
+        const offset = scrollProgress * pathLength
+        const point = curve.getPointAtLength(offset)
+        const before = curve.getPointAtLength(Math.max(offset - 1, 0))
+        const after = curve.getPointAtLength(Math.min(offset + 1, pathLength))
+        const angle = Math.atan2(after.y - before.y, after.x - before.x) * 180 / Math.PI
+
+        progressLine.style.strokeDashoffset = String(pathLength - offset)
+        slider.setAttribute('transform', `translate(${point.x}, ${point.y}) rotate(${angle})`)
+        ticking = false
+    }
+
+    function requestRender() {
+        if (ticking) return
+        ticking = true
+        requestAnimationFrame(render)
+    }
+
+    window.addEventListener('scroll', requestRender, { passive: true })
+    window.addEventListener('resize', () => {
+        totalHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1)
+        requestRender()
+    })
+
+    render()
+}
+
+initHomeLineProgress()

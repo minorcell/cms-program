@@ -23,9 +23,24 @@ body {
     z-index: -1;
 }
 
+.home-line-base,
+#home-line-progress {
+    fill: none;
+    stroke-linecap: round;
+}
+
+.home-line-base {
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 0.8;
+}
+
+#home-line-progress {
+    stroke: rgba(255, 255, 255, 0.95);
+    stroke-width: 1.6;
+}
+
 /* stylelint-disable-next-line selector-max-id */
 #slider {
-    transition: all 0.1s ease;
     animation: blink 1.5s infinite ease-in-out;
 }
 
@@ -86,24 +101,14 @@ body {
 }
 
 .grid-overlay {
-    display: grid;
     width: 75vw;
     height: 75vh;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    pointer-events: all;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    pointer-events: auto;
     z-index: 10;
-}
-
-.grid-cell {
-    background: transparent;
-    border: 0.5px solid rgba(0, 0, 0, 0.05);
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .page:nth-child(2) {

@@ -753,22 +753,23 @@ function handleBackButton() {
   }
 }
 
-// resize
+let orbitResizeFrame = null;
 window.addEventListener('resize', () => {
-  initOrbitAnimation();
-});
+  if (orbitResizeFrame) return;
+  orbitResizeFrame = requestAnimationFrame(() => {
+    orbitResizeFrame = null;
+    initOrbitAnimation();
+  });
+}, { passive: true });
 
 // 初始化页面
 document.addEventListener("DOMContentLoaded", function () {
-  // 初始化GSAP ScrollTrigger
-  gsap.registerPlugin(ScrollTrigger);
-  
   initCurrentMissionIndex(); // 根据localStorage初始化任务索引
-  StartBackground(); // 初始化星空背景和流星效果
   initOrbitAnimation(); // 初始化轨道动画
   updateMissionContent(currentMissionIndex, 'initial'); // 初始加载对应的任务数据
   handleNavigation(); // 设置导航按钮的点击事件监听
   handleBackButton(); // 设置返回按钮的点击事件监听
+  StartBackground(); // 内容和交互就绪后再初始化装饰背景
   
   // 添加按钮入场动画
   gsap.from([lastCircle, nextCircle], {
@@ -793,11 +794,5 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   // 初始化鼠标控制器
-  new Mouse({
-    defaultCursor: '../assets/images/common/MouseDefault.svg',
-    clickCursor: '../assets/images/common/MouseClick.svg',
-  });
-
   // 初始化Logo动画
-  new LogoAnimation();
 });

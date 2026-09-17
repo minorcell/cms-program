@@ -6,7 +6,6 @@
 cms-program/
 ├── .github/               # GitHub 配置和工作流
 ├── assets/                # 静态资源
-├── build/                 # 下载的依赖包
 ├── pages/                 # HTML页面
 ├── scripts/               # JavaScript脚本
 ├── styles/                # 样式文件
@@ -23,9 +22,21 @@ cms-program/
 
 ### 文件组织
 
-- `reset.css`: 只包含全局重置和基础样式，加载其他 CSS 文件
+- `reset.css`: 只包含全局重置和基础样式
 - `fonts.css`: 定义所有字体和文本样式
 - `keyframes.css`: 集中定义所有动画关键帧
+
+页面直接并行加载这三个样式文件，避免通过 `@import` 形成串行请求。
+
+## 第三方依赖
+
+第三方库通过 jsDelivr 按页面需求加载，并固定版本以保持原有行为：
+
+- Three.js `0.145.0`
+- GSAP `3.9.1`
+- ScrollTrigger `3.12.5`（仅星轨纪年页面）
+
+项目需要通过 HTTP 静态服务器运行，不再支持断网或 `file://` 方式预览。
 
 ## 字体规范
 
@@ -89,4 +100,4 @@ cms-program/
   - build: 构建系统或外部依赖
   - ci: CI 配置
 
-本文档最后更新时间：2025 年 6 月 5 日
+本文档最后更新时间：2026 年 9 月 17 日

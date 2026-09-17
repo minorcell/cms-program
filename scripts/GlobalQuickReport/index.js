@@ -368,32 +368,13 @@ function initGJHZ() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 初始化GSAP ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
-    
     const header = document.querySelector('.header');
     const scrollContainer = document.querySelector('.container');
     const starBg = document.querySelector('.star-bg');
     if (!header || !scrollContainer || !starBg) return;
 
     // 初始化头部控制器
-    new HeaderController(header, { scrollContainer });
-
-    // 初始化鼠标控制器
-    new Mouse({
-        defaultCursor: '../assets/images/common/MouseDefault.svg',
-        clickCursor: '../assets/images/common/MouseClick.svg',
-    });
-
-    // 初始化Logo动画
-    new LogoAnimation();
-
-    // 初始化星空背景
-    new StarBackground(starBg, {
-        starCount: 200
-    });
-
-    new MeteorEffect(starBg)
+    new HeaderController(header, { container: scrollContainer });
 
     // 预创建新闻弹窗
     createNewsModal();
@@ -406,4 +387,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 初始化GKHZ
     initGJHZ();
+
+    // 装饰效果最后初始化，避免阻塞内容和交互
+    new StarBackground(starBg, {
+        starCount: 200
+    });
+    new MeteorEffect(starBg)
 });

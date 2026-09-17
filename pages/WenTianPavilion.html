@@ -5,6 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>问天阁｜中国载人航天</title>
+  <link rel="preload" href="../assets/images/common/MouseDefault.svg" as="image" type="image/svg+xml" fetchpriority="high">
+  <link rel="preload" href="../assets/images/common/MouseClick.svg" as="image" type="image/svg+xml" fetchpriority="high">
+  <script src="../scripts/common/Mouse.js"></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="../styles/keyframes.css">
+  <link rel="stylesheet" href="../styles/fonts.css">
   <link rel="stylesheet" href="../styles/reset.css">
   <link rel="stylesheet" href="../styles/header.css">
   <link rel="stylesheet" href="../styles/WenTianPavilion/index.css">
@@ -115,7 +121,7 @@
         <h2>恭喜获得一个碎片</h2>
       </div>
       <div class="fragment-img">
-        <img src="../assets/images/WenTianPavilion/back01.svg" alt="fragment">
+        <img src="../assets/images/WenTianPavilion/back01.webp" alt="fragment">
         <!-- 如果获取全部碎片，则展示完所有碎片，否则展示当前获取的碎片 -->
       </div>
       <div class="continue-btn">
@@ -133,7 +139,7 @@
         碎片收集进度1/4
       </div>
       <div class="backpack-item">
-        <img src="../assets/images/WenTianPavilion/back01.svg" alt="fragment">
+        <img src="../assets/images/WenTianPavilion/back01.webp" alt="fragment">
         <img src="../assets/images/WenTianPavilion/unkonw.svg" alt="unkonw">
         <img src="../assets/images/WenTianPavilion/unkonw.svg" alt="unkonw">
         <img src="../assets/images/WenTianPavilion/unkonw.svg" alt="unkonw">
@@ -153,10 +159,10 @@
         <div class="full-puzzle">
           <img src="../assets/images/WenTianPavilion/FGS.svg" alt="FGS">
         </div>
-        <img src="../assets/images/WenTianPavilion/back01.svg" alt="fragment">
-        <img src="../assets/images/WenTianPavilion/back02.svg" alt="fragment">
-        <img src="../assets/images/WenTianPavilion/back03.svg" alt="fragment">
-        <img src="../assets/images/WenTianPavilion/back04.svg" alt="fragment">
+        <img src="../assets/images/WenTianPavilion/back01.webp" alt="fragment">
+        <img src="../assets/images/WenTianPavilion/back02.webp" alt="fragment">
+        <img src="../assets/images/WenTianPavilion/back03.webp" alt="fragment">
+        <img src="../assets/images/WenTianPavilion/back04.webp" alt="fragment">
       </div>
     </div>
   </div>
@@ -165,13 +171,10 @@
     <img src="../assets/images/WenTianPavilion/backs.svg" alt="backpack">
     打开
   </div>
-  <script src="../build/gsap.js"></script>
-  <script src="../build/three_r145.js"></script>
-  <script src="../build/three_objloader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.9.1/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.145.0/build/three.min.js"></script>
   <script src="../scripts/common/StarBackground.js"></script>
   <script src="../scripts/common/MeteorEffect.js"></script>
-  <script src="../scripts/common/Mouse.js"></script>
-  <script src="../scripts/common/LogoAnimation.js"></script>
   <script src="../scripts/WenTianPavilion/index.js"></script>
 </body>
 

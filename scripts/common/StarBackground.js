@@ -24,6 +24,7 @@ class StarBackground {
 
         this.renderer = new THREE.WebGLRenderer({ alpha: true });
         this.renderer.setSize(container.clientWidth, container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setClearColor(0x000000, 0);
         this.canvas = this.renderer.domElement;
         this.canvas.style.position = 'absolute';
@@ -40,6 +41,11 @@ class StarBackground {
         this.elapsed = options.elapsed || 0;  // 闪缩速度
 
         this.createStars();
+        this.isVisible = false;
+        this.visibilityObserver = new IntersectionObserver(([entry]) => {
+            this.isVisible = entry.isIntersecting;
+        }, { rootMargin: '100px' });
+        this.visibilityObserver.observe(container);
         this.animate();
 
         window.addEventListener('resize', () => this.handleResize());
@@ -102,6 +108,8 @@ class StarBackground {
 
     animate = () => {
         requestAnimationFrame(this.animate);
+        if (!this.isVisible || document.hidden) return;
+
         this.elapsed += 0.008; // 减慢闪烁速度
         this.stars.rotation.x += this.xSpeed;
         this.stars.rotation.y += this.ySpeed;

@@ -52,4 +52,10 @@
 /* stylelint-disable-next-line selector-max-id */
 #logo {
     height: 100%;
+    opacity: 1;
+    transition: opacity 0.15s ease;
+}
+
+#logo:hover {
+    opacity: 0.82;
 }

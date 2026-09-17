@@ -319,27 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // 初始化GSAP ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
   
-  // 刷新ScrollTrigger以确保正确计算
-  ScrollTrigger.refresh();
-
   // 初始化头部控制器
-  new HeaderController(header, { scrollContainer });
-
-  // 初始化星空背景
-  new StarBackground(starContainer, {
-    starCount: 500,
-    starSizeMin: 0.08,
-    starSizeMax: 0.16,
-    xSpeed: 0.0002,
-    ySpeed: 0.0002,
-    elapsed: 0,
-  });
-
-  // 初始化流星效果
-  new MeteorEffect(starContainer, {
-    maxMeteors: 20,
-    zIndex: 1,
-  });
+  new HeaderController(header, { container: scrollContainer });
 
   // 渲染卡片
   renderCards(cardsContainer, cards);
@@ -353,15 +334,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // 监听标题可见性
   observeTitles();
 
+  // 动态内容和触发器创建完成后再统一计算位置
+  ScrollTrigger.refresh();
+
   // 检查是否需要滚动到特定卡片
   scrollToCard();
 
-  // 初始化鼠标控制器
-  new Mouse({
-    defaultCursor: '../assets/images/common/MouseDefault.svg',
-    clickCursor: '../assets/images/common/MouseClick.svg',
+  // 装饰效果最后初始化，避免阻塞卡片渲染
+  new StarBackground(starContainer, {
+    starCount: 500,
+    starSizeMin: 0.08,
+    starSizeMax: 0.16,
+    xSpeed: 0.0002,
+    ySpeed: 0.0002,
+    elapsed: 0,
   });
 
-  // 初始化Logo动画
-  new LogoAnimation();
+  new MeteorEffect(starContainer, {
+    maxMeteors: 20,
+    zIndex: 1,
+  });
+
 });
