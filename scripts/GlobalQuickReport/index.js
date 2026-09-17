@@ -38,58 +38,58 @@ const news = [
 
 const htkjyymfw = [
     {
-        img: "../assets/images/GlobalQuickReport/hf01.jpg",
+        img: "../assets/images/GlobalQuickReport/hf01.webp",
         vodeo: "../assets/videos/GlobalQuickReport/hf01.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/hf02.jpg",
+        img: "../assets/images/GlobalQuickReport/hf02.webp",
         vodeo: "../assets/videos/GlobalQuickReport/hf02.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/hf03.jpg",
+        img: "../assets/images/GlobalQuickReport/hf03.webp",
         vodeo: "../assets/videos/GlobalQuickReport/hf03.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/hf04.jpg",
+        img: "../assets/images/GlobalQuickReport/hf04.webp",
         vodeo: "../assets/videos/GlobalQuickReport/hf04.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/hf05.jpg",
+        img: "../assets/images/GlobalQuickReport/hf05.webp",
         vodeo: "../assets/videos/GlobalQuickReport/hf05.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/hf06.jpg",
+        img: "../assets/images/GlobalQuickReport/hf06.webp",
         vodeo: "../assets/videos/GlobalQuickReport/hf06.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/hf07.jpg",
+        img: "../assets/images/GlobalQuickReport/hf07.webp",
         vodeo: "../assets/videos/GlobalQuickReport/hf07.mp4",
     }
 ]
 
 const gkhz = [
     {
-        img: "../assets/images/GlobalQuickReport/gj01.jpg",
+        img: "../assets/images/GlobalQuickReport/gj01.webp",
         vodeo: "../assets/videos/GlobalQuickReport/gj01.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/gj02.jpg",
+        img: "../assets/images/GlobalQuickReport/gj02.webp",
         vodeo: "../assets/videos/GlobalQuickReport/gj02.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/gj03.jpg",
+        img: "../assets/images/GlobalQuickReport/gj03.webp",
         vodeo: "../assets/videos/GlobalQuickReport/gj03.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/gj04.jpg",
+        img: "../assets/images/GlobalQuickReport/gj04.webp",
         vodeo: "../assets/videos/GlobalQuickReport/gj04.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/gj05.jpg",
+        img: "../assets/images/GlobalQuickReport/gj05.webp",
         vodeo: "../assets/videos/GlobalQuickReport/gj05.mp4",
     },
     {
-        img: "../assets/images/GlobalQuickReport/gj06.jpg",
+        img: "../assets/images/GlobalQuickReport/gj06.webp",
         vodeo: "../assets/videos/GlobalQuickReport/gj06.mp4",
     }
 ]
@@ -315,7 +315,7 @@ function initHTKJYYYMSFW() {
     
     container.innerHTML = htkjyymfw.map((item, index) =>
         `<div class="item">
-            <img src="${item.img}" data-index="${index}" alt="HTKJYYYMSFW Image">
+            <img src="${item.img}" data-index="${index}" alt="HTKJYYYMSFW Image" loading="lazy" decoding="async" width="1920" height="1080">
         </div>`
     ).join('');
 
@@ -344,7 +344,7 @@ function initGJHZ() {
     
     container.innerHTML = gkhz.map((item, index) =>
         `<div class="item">
-            <img src="${item.img}" data-index="${index}" alt="GKHZ Image">
+            <img src="${item.img}" data-index="${index}" alt="GKHZ Image" loading="lazy" decoding="async" width="1920" height="1080">
         </div>`
     ).join('');
 

@@ -318,7 +318,7 @@ body {
 .milestone .rocket-launch {
     width: 100%;
     height: 100%;
-    background: url('./../../assets/images/index/RocketLaunch.png');
+    background: url('./../../assets/images/index/RocketLaunch.webp');
     background-repeat: no-repeat;
     background-size: cover;
     transform: scale(1.25) translate(0, -3.2rem);

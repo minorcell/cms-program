@@ -129,7 +129,7 @@ body {
     height: 35vh;
     left: 9vw;
     bottom: 2vh;
-    background-image: url("../../assets/images/TwelveOrderStars/2_1.png");
+    background-image: url("../../assets/images/TwelveOrderStars/2_1.webp");
     position: absolute;
 }
 
@@ -189,7 +189,7 @@ body {
     height: 25vh;
     left: 12.5vw;
     bottom: 40vh;
-    background-image: url("../../assets/images/TwelveOrderStars/2_2.png");
+    background-image: url("../../assets/images/TwelveOrderStars/2_2.webp");
 }
 
 .page:nth-child(2) .parts .part:nth-child(2) .stage-info {
@@ -248,7 +248,7 @@ body {
     height: 15vh;
     left: 23vw;
     bottom: 66vh;
-    background-image: url("../../assets/images/TwelveOrderStars/2_3.png");
+    background-image: url("../../assets/images/TwelveOrderStars/2_3.webp");
 }
 
 .page:nth-child(2) .parts .part:nth-child(3) .stage-info {
@@ -307,7 +307,7 @@ body {
     height: 12vh;
     left: 37vw;
     bottom: 80.5vh;
-    background-image: url("../../assets/images/TwelveOrderStars/2_4.png");
+    background-image: url("../../assets/images/TwelveOrderStars/2_4.webp");
     background-size: 50%;
 }
 
@@ -367,7 +367,7 @@ body {
     height: 9vh;
     left: 50vw;
     bottom: 87vh;
-    background-image: url("../../assets/images/TwelveOrderStars/2_5.png");
+    background-image: url("../../assets/images/TwelveOrderStars/2_5.webp");
     background-size: 30%;
 }
 

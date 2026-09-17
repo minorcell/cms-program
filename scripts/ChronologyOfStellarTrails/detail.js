@@ -18,13 +18,13 @@ const animationDuration = 300; // 动画持续时间 (毫秒), 如果CSS中的�
 const missionData = [
   {
     id: 1,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo01.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo01.webp",  // 任务logo
     rocketName: "神舟五号",  // 火箭名称
     launchDate: "2003 10 15",  // 发射日期
     people: [  // 参与人员
       {
         name: "杨利伟",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero01_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero01_1.webp",  // 头像图片路径
       }
       // {
       //   name: "聂海胜",
@@ -38,17 +38,17 @@ const missionData = [
   },
   {
     id: 2,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo02.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo02.webp",  // 任务logo
     rocketName: "神舟六号",  // 火箭名称
     launchDate: "2005 10 12",  // 发射日期
     people: [  // 参与人员
       {
         name: "费俊龙",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero02_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero02_1.webp",  // 头像图片路径
       },
       {
         name: "聂海胜",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero02_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero02_2.webp",
       }
     ],
     missionStartDate: "2005.10.12 9：00",  // 起飞时间
@@ -58,21 +58,21 @@ const missionData = [
   },
   {
     id: 3,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo03.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo03.webp",  // 任务logo
     rocketName: "神舟七号",  // 火箭名称
     launchDate: "2008 09 15",  // 发射日期
     people: [  // 参与人员
       {
         name: "刘伯明",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_1.webp",  // 头像图片路径
       },
       {
         name: "聂海胜",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_2.webp",
       },
       {
         name: "景海鹏",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_3.webp",
       }
     ],
     missionStartDate: "2008.09.25 21：10",  // 起飞时间
@@ -82,21 +82,21 @@ const missionData = [
   },
   {
     id: 4,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo04.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo04.webp",  // 任务logo
     rocketName: "神舟九号",  // 火箭名称
     launchDate: "2012 06 16",  // 发射日期
     people: [  // 参与人员
       {
         name: "景海鹏",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero04_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_3.webp",  // 头像图片路径
       },
       {
         name: "刘旺",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero04_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero04_2.webp",
       },
       {
         name: "刘洋",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero04_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero04_3.webp",
       }
     ],
     missionStartDate: "2012.06.16 18：37",  // 起飞时间
@@ -106,21 +106,21 @@ const missionData = [
   },
   {
     id: 5,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo05.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo05.webp",  // 任务logo
     rocketName: "神舟十号",  // 火箭名称
     launchDate: "2013 06 11",  // 发射日期
     people: [  // 参与人员
       {
         name: "聂海胜",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero05_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_2.webp",  // 头像图片路径
       },
       {
         name: "张晓光",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero05_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero05_2.webp",
       },
       {
         name: "王亚平",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero05_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero05_3.webp",
       }
     ],
     missionStartDate: "2013.06.11 17：38",  // 起飞时间
@@ -130,17 +130,17 @@ const missionData = [
   },
   {
     id: 6,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo06.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo06.webp",  // 任务logo
     rocketName: "神舟十一号",  // 火箭名称
     launchDate: "2016 10 17",  // 发射日期
     people: [  // 参与人员
       {
         name: "景海鹏",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero06_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_3.webp",  // 头像图片路径
       },
       {
         name: "陈冬",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero06_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero06_2.webp",
       }
     ],
     missionStartDate: "2016.10.17 07：30",  // 起飞时间
@@ -150,21 +150,21 @@ const missionData = [
   },
   {
     id: 7,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo07.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo07.webp",  // 任务logo
     rocketName: "神舟十二号",  // 火箭名称
     launchDate: "2021 06 17",  // 发射日期
     people: [  // 参与人员
       {
         name: "聂海胜",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero07_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_2.webp",  // 头像图片路径
       },
       {
         name: "刘伯明",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero07_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_1.webp",
       },
       {
         name: "汤洪波",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero07_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero07_3.webp",
       }
     ],
     missionStartDate: "2021.06.17 09：22",  // 起飞时间
@@ -174,21 +174,21 @@ const missionData = [
   },
   {
     id: 8,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo08.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo08.webp",  // 任务logo
     rocketName: "神舟十三号",  // 火箭名称
     launchDate: "2021 10 16",  // 发射日期
     people: [  // 参与人员
       {
         name: "王亚平",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero08_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero05_3.webp",  // 头像图片路径
       },
       {
         name: "翟志刚",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero08_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero08_2.webp",
       },
       {
         name: "叶光富",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero08_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero08_3.webp",
       }
     ],
     missionStartDate: "2021.10.16 00：23",  // 起飞时间
@@ -198,21 +198,21 @@ const missionData = [
   },
   {
     id: 9,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo09.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo09.webp",  // 任务logo
     rocketName: "神舟十四号",  // 火箭名称
     launchDate: "2022 06 05",  // 发射日期
     people: [  // 参与人员
       {
         name: "陈冬",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero09_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero06_2.webp",  // 头像图片路径
       },
       {
         name: "刘洋",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero09_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero04_3.webp",
       },
       {
         name: "蔡旭哲",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero09_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero09_3.webp",
       }
     ],
     missionStartDate: "2022.06.05 10：44",  // 起飞时间
@@ -222,21 +222,21 @@ const missionData = [
   },
   {
     id: 10,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo10.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo10.webp",  // 任务logo
     rocketName: "神舟十五号",  // 火箭名称
     launchDate: "2022 11 29",  // 发射日期
     people: [  // 参与人员
       {
         name: "费俊龙",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero10_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero10_1.webp",  // 头像图片路径
       },
       {
         name: "邓清明",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero10_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero10_2.webp",
       },
       {
         name: "张陆",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero10_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero10_3.webp",
       }
     ],
     missionStartDate: "2022.11.29 23：08",  // 起飞时间
@@ -246,21 +246,21 @@ const missionData = [
   },
   {
     id: 11,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo11.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo11.webp",  // 任务logo
     rocketName: "神舟十六号",  // 火箭名称
     launchDate: "2023 05 30",  // 发射日期
     people: [  // 参与人员
       {
         name: "景海鹏",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero11_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero03_3.webp",  // 头像图片路径
       },
       {
         name: "朱杨柱",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero11_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero11_2.webp",
       },
       {
         name: "桂海潮",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero11_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero11_3.webp",
       }
     ],
     missionStartDate: "2023.05.30 09：31",  // 起飞时间
@@ -270,21 +270,21 @@ const missionData = [
   },
   {
     id: 12,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo12.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo12.webp",  // 任务logo
     rocketName: "神舟十七号",  // 火箭名称
     launchDate: "2023 10 26",  // 发射日期
     people: [  // 参与人员
       {
         name: "汤洪波",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero12_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero12_1.webp",  // 头像图片路径
       },
       {
         name: "唐胜杰",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero12_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero12_2.webp",
       },
       {
         name: "江新林",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero12_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero12_3.webp",
       }
     ],
     missionStartDate: "2023.10.26 11：14",  // 起飞时间
@@ -294,21 +294,21 @@ const missionData = [
   },
   {
     id: 13,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo13.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo13.webp",  // 任务logo
     rocketName: "神舟十八号",  // 火箭名称
     launchDate: "2024 04 25",  // 发射日期
     people: [  // 参与人员
       {
         name: "叶光富",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero13_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero08_3.webp",  // 头像图片路径
       },
       {
         name: "李聪",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero13_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero13_2.webp",
       },
       {
         name: "李广苏",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero13_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero13_3.webp",
       }
     ],
     missionStartDate: "2024.04.25 20：58",  // 起飞时间
@@ -318,21 +318,21 @@ const missionData = [
   },
   {
     id: 14,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo14.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo14.webp",  // 任务logo
     rocketName: "神舟十九号",  // 火箭名称
     launchDate: "2024 10 30",  // 发射日期
     people: [  // 参与人员
       {
         name: "蔡旭哲",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero14_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero09_3.webp",  // 头像图片路径
       },
       {
         name: "宋令东",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero14_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero14_2.webp",
       },
       {
         name: "王浩泽",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero14_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero14_3.webp",
       }
     ],
     missionStartDate: "2024.10.30 04：27",  // 起飞时间
@@ -342,21 +342,21 @@ const missionData = [
   },
   {
     id: 15,  // id
-    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo15.png",  // 任务logo
+    logoSrc: "../assets/images/ChronologyOfStellarTrails/logo15.webp",  // 任务logo
     rocketName: "神舟二十号",  // 火箭名称
     launchDate: "2025 04 24",  // 发射日期
     people: [  // 参与人员
       {
         name: "陈冬",  // 姓名
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero15_1.jpg",  // 头像图片路径
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero06_2.webp",  // 头像图片路径
       },
       {
         name: "陈中瑞",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero15_2.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero15_2.webp",
       },
       {
         name: "王杰",
-        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero15_3.jpg",
+        imgSrc: "../assets/images/ChronologyOfStellarTrails/hero15_3.webp",
       }
     ],
     missionStartDate: " 2025.04.24 17：17",  // 起飞时间

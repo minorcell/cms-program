@@ -3,105 +3,105 @@ const bar = document.querySelector('.bar');
 const cards = [
   {
     id: 1,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/01.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/01.webp",
     year: "2003",
     description: "神舟五号（Shenzhou V，简称“神五”），是中国载人航天工程发射的第五艘飞船，也是中华人民共和国发射的第一艘载人航天飞船。",
     title: "发射第一颗载人航天飞船"
   },
   {
     id: 2,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/02.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/02.webp",
     year: "2005",
     description: "神舟六号，简称“神六”，为中国载人航天工程发射的第六艘飞船，是中国的第二次载人航天飞行任务、人类世界上第243次太空飞行，也是中国“三步走”空间发展战略的第二阶段。",
     title: "三步走空间发展战略的第二阶段"
   },
   {
     id: 3,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/03.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/03.webp",
     year: "2008",
     description: "中国于1980年成神舟七号（Shenzhou VII，简称：神七），是中国载人航天工程发射的第七艘飞船，是中国的第三次载人航天飞行任务，也是中国“三步走”空间发展战略的第二阶段。功发射了第一颗实用气象卫星风云一号，标志着中国掌握了气象卫星技术。",
     title: "中国“三步走”空间发展战略的第二阶段"
   },
   {
     id: 4,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/04.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/04.webp",
     year: "2012",
     description: "神舟九号（简称“神九”）为中国载人航天工程发射的第九艘飞船，是中国的第四次载人航天飞行任务，也是中国首次载人交会对接任务。",
     title: "中国首次载人交会对接任务"
   },
   {
     id: 5,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/05.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/05.webp",
     year: "2013",
     description: "神舟十号（简称“神十”），是中国载人航天工程发射的第十艘飞船，也是中国的第五次载人航天飞行任务。",
     title: "航天员王亚平首次进入太空"
   },
   {
     id: 6,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/06.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/06.webp",
     year: "2016",
     description: "神舟十一号（简称“神十一”），为中国载人航天工程发射的第十一艘飞船，是中国第六次载人飞行任务，也是创造中国载人航天在轨飞行时间的新纪录的重要里程碑。",
     title: "在轨飞行时间的新纪录的重要里程碑"
   },
   {
     id: 7,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/07.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/07.webp",
     year: "2021",
     description: "神舟十二号（英文：Shenzhou-12或Shenzhou Ⅻ ，简称：神十二），是中国载人航天工程发射的第十二艘飞船，也是空间站关键技术验证阶段第四次飞行任务和空间站阶段首次载人飞行任务。",
     title: "第四次飞行任务和空间站阶段首次载人飞行任务"
   },
   {
     id: 8,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/08.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/08.webp",
     year: "2021",
     description: "神舟十三号（Shenzhou XIII 或 Shenzhou-13，简称“神十三”），为中国载人航天工程发射的第十三艘飞船，是中国空间站关键技术验证阶段第六次飞行，也是该阶段最后一次飞行任务。",
     title: "女航天员王亚平二次进入太空"
   },
   {
     id: 9,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/09.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/09.webp",
     year: "2022",
     description: "神舟十四号（英文：Shenzhou-14，英文又称：Shenzhou XIV，简称：神十四），为中国载人航天工程发射的第十四艘飞船，是中国空间站组合体之一。",
     title: "中国空间站组合体之一"
   },
   {
     id: 10,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/10.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/10.webp",
     year: "2022",
     description: " 神舟十五号（英文：Shenzhou-15，又称：Shenzhou XV，简称：神十五），是中国发射载人航天工程的第十五艘飞船。",
     title: "发射第十五艘飞船"
   },
   {
     id: 11,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/11.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/11.webp",
     year: "2023",
     description: "神舟十六号（Shenzhou XVI 或 Shenzhou-16，简称：神十六），是中国载人航天工程神舟系列载人飞船的第十六艘飞船。中国空间站应用与发展阶段的首艘载人飞船。",
     title: "中国空间站应用与发展阶段的首艘载人飞船"
   },
   {
     id: 12,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/12.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/12.webp",
     year: "2023",
     description: "神舟十七号（Shenzhou XVII，简称：神十七），为中国载人航天工程的第十七艘飞船。",
     title: "发射第十七艘飞船"
   },
   {
     id: 13,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/13.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/13.webp",
     year: "2024",
     description: "中国于1980年成功神舟十八号（Shenzhou XVIII ,简称神十八），是中国自行研制的用于天地往返运输人员和物资的载人航天器，飞船由轨道舱、返回舱和推进舱构成，是中国可靠性、安全性要求最严苛的航天器。发射了第一颗实用气象卫星风云一号，标志着中国掌握了气象卫星技术。",
     title: "中国可靠性、安全性要求最严苛的航天器"
   },
   {
     id: 14,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/14.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/14.webp",
     year: "2024",
     description: "神舟十九号（Shenzhou XIX，简称：神十九），是由中国航天科技集团五院抓总研制，为中国载人航天工程的第十九艘神舟载人飞船。",
     title: "中国载人航天工程的第十九艘神舟载人飞船"
   },
   {
     id: 15,
-    imgSrc: "../assets/images/ChronologyOfStellarTrails/15.jpg",
+    imgSrc: "../assets/images/ChronologyOfStellarTrails/15.webp",
     year: "2025",
     description: "神舟二十号（Shenzhou20，Shenzhou XX，简称：神二十），是由航天科技集团五院抓总研制的用于天地往返运输人员和物资的载人航天器，是中国载人航天工程的第二十艘神舟系列载人飞船，中国载人航天进入中国空间站应用与发展阶段的第五艘飞船。",
     title: "中国空间站应用与发展阶段的第五艘飞船"
@@ -145,7 +145,7 @@ function renderCards(container, cardsData) {
     cardElement.innerHTML = `
         <div class="left">
           <div class="card-image"
-          style="background-image: url('${card.imgSrc}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+          data-background="${card.imgSrc}"
         ></div>
         <div class="card-content">
           <div class="card-year">${card.year}</div>
@@ -164,9 +164,34 @@ function renderCards(container, cardsData) {
 
   // 添加详情按钮点击事件监听
   addDetailButtonListeners();
+  observeCardImages(container);
   
   // 重新刷新ScrollTrigger以识别新添加的元素
   ScrollTrigger.refresh();
+}
+
+function observeCardImages(container) {
+  const images = container.querySelectorAll('.card-image[data-background]');
+
+  if (!('IntersectionObserver' in window)) {
+    images.forEach(loadCardImage);
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      loadCardImage(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { rootMargin: '300px 0px' });
+
+  images.forEach((image) => observer.observe(image));
+}
+
+function loadCardImage(image) {
+  image.style.backgroundImage = `url("${image.dataset.background}")`;
+  image.removeAttribute('data-background');
 }
 
 /**
