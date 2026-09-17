@@ -1,3 +1,28 @@
+@font-face {
+    font-family: fys;
+    src: local("Songti SC"), local("STSong"), local("SimSun"), local("宋体"), local("Noto Serif SC"), local("Noto Serif CJK SC"), local("Source Han Serif SC");
+}
+
+@font-face {
+    font-family: hkjt;
+    src: local("Kaiti SC"), local("STKaiti"), local("KaiTi"), local("楷体"), local("Noto Serif SC"), local("Noto Serif CJK SC");
+}
+
+@font-face {
+    font-family: qtbfsxt;
+    src: local("Kaiti SC"), local("STKaiti"), local("KaiTi"), local("楷体"), local("Noto Serif SC"), local("Noto Serif CJK SC");
+}
+
+@font-face {
+    font-family: hksjt;
+    src: local("FangSong SC"), local("STFangsong"), local("FangSong"), local("仿宋"), local("Noto Serif SC"), local("Noto Serif CJK SC");
+}
+
+@font-face {
+    font-family: ysbty;
+    src: local("Yuanti SC"), local("YouYuan"), local("幼圆"), local("Microsoft YaHei UI"), local("微软雅黑"), local("PingFang SC"), local("Noto Sans SC"), local("Noto Sans CJK SC");
+}
+
 * {
     margin: 0;
     padding: 0;
